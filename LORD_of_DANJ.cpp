@@ -39,6 +39,8 @@ struct HeroStat // Структура персонажа (героя)
     double Parrying; // Уклонение от атаки, уменьшает получаемый урон (влияет Ловкость и Мудрость)
     double Initiftive; // Инициатива, влияет на возможность повторного удара (влияет Интелект, Мудрость и Харизма). Может увеличивать урон при бое, имеет накопительный эффект в бою, Максимально за бой может быть 3-х кратное увеличение урона (активируется)
     int HealthHero; // Количество жизней. (Можноли сразу в структуре прописать формулу расчета данного показателя или лучше в отдельной функции реализовать? (влияет Сила, Выносливость и уровень)
+    int ScalExp; // Шкала опыта
+    int ScalExpUp; // Сколько нужно уопыта набрать для нового уровня героя
     // Позже можно добавить другие характеристики или выделить их в отдельную структуру доп характеристик
 };
 
@@ -50,6 +52,7 @@ HeroStat Recalculate_Hero(HeroStat HeroGame);
 HeroStat Distr_Point_Hero(HeroStat HeroGame);
 HeroStat New_Game();
 void Save_Game(short LvlDanj, HeroStat HeroGame); // Дописать вводные данные
+void Load_Game(short LvlDanj, HeroStat HeroGame);
 
 
 /*      Тело функций        */
@@ -69,6 +72,8 @@ void Print_Hero(HeroStat HeroGame) // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
     std::cout << "Уклонение: " << HeroGame.Parrying << std::endl;
     std::cout << "Инициатива: " << HeroGame.Initiftive << std::endl;
     std::cout << "Количество здоровья: " << HeroGame.HealthHero << std::endl;
+    std::cout << "Шкала текуцщего опыта: " << HeroGame.ScalExp << std::endl;
+    std::cout << "Сколько опыта для перехода на новый уровень: " << HeroGame.ScalExpUp << std::endl;
 }
 
 void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописывать в функцию принимаемы данные или нет? или заменить тип на int с возможным выбором // Start = true если меню загружается пир старте программы
@@ -81,9 +86,10 @@ void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописы
     std::cout << "\t\t\tNEWGAME - 1" << std::endl << std::endl;
     std::cout << "\t\t\tLOADING - 2" << std::endl << std::endl;
     if (Start == false)
+    {
         std::cout << "\t\t\tSAVING - 3" << std::endl << std::endl;
-    std::cout << "\t\t\tSAVING - 3" << std::endl << std::endl;
-    std::cout << "\t\t\tBACK - 4" << std::endl << std::endl;
+        std::cout << "\t\t\tBACK - 4" << std::endl << std::endl;
+    }
     std::cout << "\t\t\tEXIT - 0" << std::endl << std::endl;
     std::cin >> Menu;
     do
@@ -95,7 +101,8 @@ void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописы
             return;
             break;
         case LOAD:
-            // реализовать функцию загрузки данных ранее сохраненных посредством выбора из ранее сохраненных (если таковых нету, то так и прописать что сохранения отсуствуют)
+            Load_Game(*LvlDanj, *HeroGame); // реализовать функцию загрузки данных ранее сохраненных посредством выбора из ранее сохраненных (если таковых нету, то так и прописать что сохранения отсуствуют)
+            return;
             break;
         case SAVE:
             if (Start != false)
@@ -105,7 +112,7 @@ void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописы
             }
             else
             {
-                Save_Game(LvlDanj, HeroGame);
+                Save_Game(*LvlDanj, *HeroGame);
             }
             return;
             break;
@@ -129,6 +136,11 @@ HeroStat Recalculate_Hero(HeroStat HeroGame) // Функция перерасч�
     HeroGame.Parrying = 0.1 * HeroGame.DexterityHero + 0.02 * HeroGame.WisdomHero;
     HeroGame.Initiftive = 0.03 * HeroGame.IntelligenceHero + 0.02 * HeroGame.WisdomHero + 0.01 * HeroGame.CharizmaHero;
     HeroGame.HealthHero = (10 * HeroGame.LvlHero) * (0.8 * HeroGame.PowerHero + 0.4 * HeroGame.EnduranceHero);
+    HeroGame.ScalExpUp = 100;
+    for (int i = 0; i < HeroGame.LvlHero; i++)
+    {
+        HeroGame.ScalExpUp *= 1.5 * i;
+    }
     return HeroGame;
 }
 
@@ -219,6 +231,8 @@ void Save_Game(short LvlDanj, HeroStat HeroGame) // Функция сохран�
         fprintf(Savegame, "%f ", HeroGame.Parrying);
         fprintf(Savegame, "%f ", HeroGame.Initiftive);
         fprintf(Savegame, "%d ", HeroGame.HealthHero);
+        fprintf(Savegame, "%d ", HeroGame.ScalExp);
+        fprintf(Savegame, "%d ", HeroGame.ScalExpUp);
     }
     else
         std::cout << "Ошибка создания сохранения!" << std::endl;
@@ -226,6 +240,41 @@ void Save_Game(short LvlDanj, HeroStat HeroGame) // Функция сохран�
         std::cout << "Ошибка при сохранение!" << std::endl;
     else
         std::cout << "УСПЕШНОЕ СОХРАНЕНИЕ" << std::endl;
+}
+
+void Load_Game(short LvlDanj, HeroStat HeroGame) // Загвоздка в загрузке данных
+{
+    FILE* Loadgame;
+    const char* direct = "Save_LORD_of_DANJ\\Savegame.txt";
+    if ((fopen_s(&Loadgame, direct, "r")) == NULL)
+    {
+        fscanf_s(Loadgame, "%d ", LvlDanj);
+        fscanf_s(Loadgame, "\n");
+        fscanf_s(Loadgame, "%s ", HeroGame.NameHero, sizeof(HeroGame.NameHero));
+        fscanf_s(Loadgame, "%d ", HeroGame.LvlHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.PowerHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.DexterityHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.EnduranceHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.IntelligenceHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.WisdomHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.CharizmaHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.FreePoints);
+        fscanf_s(Loadgame, "%d ", HeroGame.MinDamage);
+        fscanf_s(Loadgame, "%d ", HeroGame.MaxDamage);
+        fscanf_s(Loadgame, "%lf ", HeroGame.Parrying);
+        fscanf_s(Loadgame, "%lf ", HeroGame.Initiftive);
+        fscanf_s(Loadgame, "%d ", HeroGame.HealthHero);
+        fscanf_s(Loadgame, "%d ", HeroGame.ScalExp);
+        fscanf_s(Loadgame, "%d ", HeroGame.ScalExpUp);
+    }
+    else
+    {
+        std::cout << "Ошибка загрузки" << std::endl;
+    }
+    if (fclose(Loadgame) == EOF)
+        std::cout << "Ошибка при Загрузке!" << std::endl;
+    else
+        std::cout << "ИГРА УСПЕШНО ЗАГРУЖЕНА" << std::endl;
 }
 
 /*      Основное тело программы     */
@@ -241,10 +290,10 @@ int main() // Вписать мейн с принимающими данными
     //реализовать функцию считывания данных из файла со списком Монстров, первые данные в файле это SizeMobList.
     Menu_Main(&LvlDanj, &HeroGame, true); // запуск главного меню. Надо вписать все входные данные
 
-    while (true) // временный цикл с меню для проверки закгрузки данных игрока и сохранения данных игрока 
-    {
-        Menu_Main(&LvlDanj, &HeroGame);
-    }
+    //while (true) // временный цикл с меню для проверки закгрузки данных игрока и сохранения данных игрока 
+    //{
+    //    Menu_Main(&LvlDanj, &HeroGame);
+    //}
 
     Print_Hero(HeroGame); // Временный вывод для проверки
 
