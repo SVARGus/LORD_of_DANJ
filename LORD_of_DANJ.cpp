@@ -6,10 +6,11 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
 
 /*      Перечень структур       */
 
-struct Monster // Для начала будут созданы 5 монстров, надо будет также реализовать считывание данных по монстрам из файла
+struct Monster // Для начала будут созданы 5 монстров, надо будет также реализовать считывание данных по монстрам из файла // ЕЩЕ не доработано
 {
     char NameMonster[25];
     short LvlMonster;
@@ -43,13 +44,32 @@ struct HeroStat // Структура персонажа (героя)
 
 /*      Перечень прототипов функций     */
 
+void Print_Hero(HeroStat HeroGame);
 void Menu_Main(short* LvlDanj, HeroStat* HeroGame, bool Start = false);
 HeroStat Recalculate_Hero(HeroStat HeroGame);
 HeroStat Distr_Point_Hero(HeroStat HeroGame);
 HeroStat New_Game();
+void Save_Game(short LvlDanj, HeroStat HeroGame); // Дописать вводные данные
 
 
 /*      Тело функций        */
+void Print_Hero(HeroStat HeroGame) // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
+{
+    std::cout << "Герой - " << HeroGame.NameHero << std::endl;
+    std::cout << "Уровень - " << HeroGame.LvlHero << std::endl;
+    std::cout << "Сила: " << HeroGame.PowerHero << std::endl;
+    std::cout << "Ловкость: " << HeroGame.DexterityHero << std::endl;
+    std::cout << "Выносливость: " << HeroGame.EnduranceHero << std::endl;
+    std::cout << "Интилект: " << HeroGame.IntelligenceHero << std::endl;
+    std::cout << "Мудрость: " << HeroGame.WisdomHero << std::endl;
+    std::cout << "Харизма: " << HeroGame.CharizmaHero << std::endl;
+    std::cout << "Свободные очки: " << HeroGame.FreePoints << std::endl;
+    std::cout << "Минимальный урон: " << HeroGame.MinDamage << std::endl;
+    std::cout << "Максимальный урон: " << HeroGame.MaxDamage << std::endl;
+    std::cout << "Уклонение: " << HeroGame.Parrying << std::endl;
+    std::cout << "Инициатива: " << HeroGame.Initiftive << std::endl;
+    std::cout << "Количество здоровья: " << HeroGame.HealthHero << std::endl;
+}
 
 void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописывать в функцию принимаемы данные или нет? или заменить тип на int с возможным выбором // Start = true если меню загружается пир старте программы
 {
@@ -70,7 +90,7 @@ void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописы
     {
         switch (Menu)
         {
-        case NEWGAME: // (ЗАКОНЧИЛ / НЕ ПРОВЕРЕН)
+        case NEWGAME: // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
             *HeroGame = New_Game();
             return;
             break;
@@ -85,8 +105,9 @@ void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописы
             }
             else
             {
-                // Реализовать функцию сохранения игры
+                Save_Game(LvlDanj, HeroGame);
             }
+            return;
             break;
         case BACK:
             break;
@@ -101,7 +122,7 @@ void Menu_Main(short *LvlDanj, HeroStat *HeroGame, bool Start) // прописы
     } while (Menu != 4);
 }
 
-HeroStat Recalculate_Hero(HeroStat HeroGame) // Функция перерасчета статов героя при повышении ЛВЛ или после распределения характеристик при старте (ЗАКОНЧИЛ / НЕ ПРОВЕРЕН)
+HeroStat Recalculate_Hero(HeroStat HeroGame) // Функция перерасчета статов героя при повышении ЛВЛ или после распределения характеристик при старте (ЗАКОНЧИЛ / ПРОВЕРЕНО)
 {
     HeroGame.MinDamage = 1 * HeroGame.PowerHero;
     HeroGame.MaxDamage = 1.5 * HeroGame.PowerHero;
@@ -111,7 +132,7 @@ HeroStat Recalculate_Hero(HeroStat HeroGame) // Функция перерасч�
     return HeroGame;
 }
 
-HeroStat Distr_Point_Hero(HeroStat HeroGame) // Функция распределения свободных очков при старте новой игры и при повышении уровня героя (ЗАКОНЧИЛ / НЕ ПРОВЕРЕН)
+HeroStat Distr_Point_Hero(HeroStat HeroGame) // Функция распределения свободных очков при старте новой игры и при повышении уровня героя (ЗАКОНЧИЛ / ПРОВЕРЕНО)
 {
     enum CHARACTER{POWER = 1, DEXTERITY, ENDURANCE, INTELLIGENCE, WISDOM, CHARIZMA};
     int Points{};
@@ -154,7 +175,7 @@ HeroStat Distr_Point_Hero(HeroStat HeroGame) // Функция распреде�
     return HeroGame;
 }
 
-HeroStat New_Game() // Функция ввода данных при старте (ЗАКОНЧИЛ / НЕ ПРОВЕРЕН)
+HeroStat New_Game() // Функция ввода данных при старте (ЗАКОНЧИЛ / ПРОВЕРЕНО)
 {
     HeroStat HeroGame{ "Name", 1, 1, 1, 1, 1, 1, 1, 10 };
     char Y_N{};
@@ -172,6 +193,41 @@ HeroStat New_Game() // Функция ввода данных при старт�
     return HeroGame;
 }
 
+void Save_Game(short LvlDanj, HeroStat HeroGame) // Функция сохранения игры (дописать вводные данные)
+{
+    std::filesystem::path SaveGame = "Save_LORD_of_DANJ"; // Создаем папку для сохранения
+    if (!std::filesystem::exists(SaveGame))
+        std::filesystem::create_directories(SaveGame);
+    // Далее сохоранение в файл, пока для игры будет только одно сохранение, позже можно сделать сохранение и загрузку если игроки разные
+    FILE* Savegame;
+    const char* direct = "Save_LORD_of_DANJ\\Savegame.txt";
+    if ((fopen_s(&Savegame, direct, "w")) == NULL)
+    {
+        fprintf(Savegame, "%d ", LvlDanj);
+        fprintf(Savegame, "\n");
+        fprintf(Savegame, "%s ", HeroGame.NameHero);
+        fprintf(Savegame, "%d ", HeroGame.LvlHero);
+        fprintf(Savegame, "%d ", HeroGame.PowerHero);
+        fprintf(Savegame, "%d ", HeroGame.DexterityHero);
+        fprintf(Savegame, "%d ", HeroGame.EnduranceHero);
+        fprintf(Savegame, "%d ", HeroGame.IntelligenceHero);
+        fprintf(Savegame, "%d ", HeroGame.WisdomHero);
+        fprintf(Savegame, "%d ", HeroGame.CharizmaHero);
+        fprintf(Savegame, "%d ", HeroGame.FreePoints);
+        fprintf(Savegame, "%d ", HeroGame.MinDamage);
+        fprintf(Savegame, "%d ", HeroGame.MaxDamage);
+        fprintf(Savegame, "%f ", HeroGame.Parrying);
+        fprintf(Savegame, "%f ", HeroGame.Initiftive);
+        fprintf(Savegame, "%d ", HeroGame.HealthHero);
+    }
+    else
+        std::cout << "Ошибка создания сохранения!" << std::endl;
+    if (fclose(Savegame) == EOF)
+        std::cout << "Ошибка при сохранение!" << std::endl;
+    else
+        std::cout << "УСПЕШНОЕ СОХРАНЕНИЕ" << std::endl;
+}
+
 /*      Основное тело программы     */
 int main() // Вписать мейн с принимающими данными
 {
@@ -185,6 +241,12 @@ int main() // Вписать мейн с принимающими данными
     //реализовать функцию считывания данных из файла со списком Монстров, первые данные в файле это SizeMobList.
     Menu_Main(&LvlDanj, &HeroGame, true); // запуск главного меню. Надо вписать все входные данные
 
+    while (true) // временный цикл с меню для проверки закгрузки данных игрока и сохранения данных игрока 
+    {
+        Menu_Main(&LvlDanj, &HeroGame);
+    }
+
+    Print_Hero(HeroGame); // Временный вывод для проверки
 
     return 0;
 }
