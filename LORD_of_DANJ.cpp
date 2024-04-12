@@ -65,7 +65,7 @@ HeroStat Distr_Point_Hero(HeroStat HeroGame);
 HeroStat New_Game();
 void Save_Game(const short LvlDanj, const HeroStat HeroGame); // Дописать вводные данные
 void Load_Game(short& LvlDanj, HeroStat& HeroGame);
-void Load_Mob_List(short& SizeMobList, Monster* MobList);
+void Load_Mob_List(short& SizeMobList, Monster*& MobList);
 
 
 /*      Тело функций        */
@@ -291,7 +291,7 @@ void Load_Game(short& LvlDanj, HeroStat& HeroGame) // (ЗАКОНЧИЛ / ПРО
         std::cout << "ИГРА УСПЕШНО ЗАГРУЖЕНА" << std::endl;
 }
 
-void Load_Mob_List(short& SizeMobList, Monster* MobList)
+void Load_Mob_List(short& SizeMobList, Monster*& MobList) // (ЗАКОНЧИЛ / ПРОВЕРЕНО) Осталось только базу п\монстров подкорректировать
 {
     FILE* LoadMobList;
     const char* direct = "MobList.txt"; // файл пока не создан
@@ -304,38 +304,47 @@ void Load_Mob_List(short& SizeMobList, Monster* MobList)
         MobList = new Monster[SizeMobList]{};
         for (int i = 0; i < SizeMobList; i++)
         {
-            fscanf_s(LoadMobList, "%s ", &MobList.NameMonster, sizeof(MobList.NameMonster));
-            fscanf_s(LoadMobList, "%d ", &MobList.LvlMonster);
-            fscanf_s(LoadMobList, "%d ", &MobList.PowerMonster);
-            fscanf_s(LoadMobList, "%d ", &MobList.DexterityMonster);
-            fscanf_s(LoadMobList, "%d ", &MobList.EnduranceMonster);
-            fscanf_s(LoadMobList, "%d ", &MobList.IntelligenceMonster);
-            fscanf_s(LoadMobList, "%d ", &MobList.WisdomMonster);
-            fscanf_s(LoadMobList, "%d ", &MobList.CharizmaMonster);
+            fscanf_s(LoadMobList, "%s ", MobList[i].NameMonster, sizeof(MobList[i].NameMonster));
+            fscanf_s(LoadMobList, "%hd ", &MobList[i].LvlMonster);
+            fscanf_s(LoadMobList, "%d ", &MobList[i].PowerMonster);
+            fscanf_s(LoadMobList, "%d ", &MobList[i].DexterityMonster);
+            fscanf_s(LoadMobList, "%d ", &MobList[i].EnduranceMonster);
+            fscanf_s(LoadMobList, "%d ", &MobList[i].IntelligenceMonster);
+            fscanf_s(LoadMobList, "%d ", &MobList[i].WisdomMonster);
+            fscanf_s(LoadMobList, "%d ", &MobList[i].CharizmaMonster);
         }
     }
-    if (fclose(LoadMobList) ==EOF)
+    if (fclose(LoadMobList) == EOF)
         std::cout << "Ошибка закрытия файла с данными монстров" << std::endl;
     else
-        std::cout << "База Мьнстров успешно загружена!!!" << std::endl;
+        std::cout << "База Монстров успешно загружена!!!" << std::endl;
 }
 
 // Ниже функции на этапе написания, в прототипы еще не добавлены!!!
 
+void Print_Mob_List(short SizeMobList, Monster* MobList) // Функция вывода данных по монстрам - временно для проверки
+{
+    std::cout << SizeMobList << std::endl;
+    for (int i = 0; i < SizeMobList; i++)
+    {
+        std::cout << MobList[i].NameMonster << " " << MobList[i].LvlMonster << " " << MobList[i].PowerMonster << " " << MobList[i].DexterityMonster << " " << MobList[i].EnduranceMonster << " " << MobList[i].IntelligenceMonster << " " << MobList[i].WisdomMonster << " " << MobList[i].CharizmaMonster << std::endl;
+    }
+}
+
 Monster Recalculate_Mob(Monster* Moblist, int LvlDanj, int Index) // Функция расчета статов монстра, запускается перед боем после рандомного выбора монстра
 {
-
+    return *Moblist;
 }
 
 int Damage_Battle(int MinDamage, int MaxDamage, double Initiative) // Функция расчета урона с учетом инициативы
 {
     int Damage = rand() % (MaxDamage - MinDamage) + MinDamage;
-    return = Damage + Damage * Initiative;
+    return (Damage + Damage * Initiative);
 }
 
 bool Parrying_Battle(double Parrying, int Lvl) // Функция просчитывания шанса уклониться от удара
 {
-    if (rand() % 3.0 <= Parrying / Lvl)
+    if (rand() % 30/10 <= Parrying / Lvl)
         return true;
     return false;
 }
@@ -344,7 +353,7 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
 {
     {
         int Index = rand() % SizeMobList; // Рандобный выбор Монстра с которым будет битва
-        Recalculate_Mob(*Moblist, LvlDanj, Index); // Генерирует статы монстра исходя из уровня данжа
+        Recalculate_Mob(Moblist, LvlDanj, Index); // Генерирует статы монстра исходя из уровня данжа
         int HealthHero = HeroGame.HealthHero; // Характеристика показывающая количество жизней героя в течение боя
         std::cout << "Пробираясь по Подземелью " << LvlDanj << " уровня, вы повстречали монстра " << Moblist[Index].NameMonster << ".\nПриготовьтесь к битве!!!" << std::endl;
         for (int i = 0; HealthHero > 0 && Moblist[Index].HealthMonster > 0; i++)
@@ -393,7 +402,8 @@ int main() // Вписать мейн с принимающими данными
     short LvlDanj{ 1 }; // Уровень данжа, при старте 1, в меню обновляются // переменную нужно сохранять при сохранении игры и выгружать при загрузке
     short SizeMobList{};
     Monster* MobList{ nullptr };
-    Load_Mob_List(SizeMobList, *MobList); // функция чтения данных по монтсрам в массив структурных данных монстров
+    Load_Mob_List(SizeMobList, MobList); // функция чтения данных по монтсрам в массив структурных данных монстров
+    //Print_Mob_List(SizeMobList, MobList); // Временная функция для проверки загрузки массива структурных данных
     //MobList = new Monster[SizeMobList]{}; //Массив монстров загружаемый из файла при старте игры
     //реализовать функцию считывания данных из файла со списком Монстров, первые данные в файле это SizeMobList.
     Menu_Main(LvlDanj, HeroGame, true); // запуск главного меню. Надо вписать все входные данные

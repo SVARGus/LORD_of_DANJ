@@ -1,0 +1,6 @@
+5 
+Fire_Dragon 1 2 3 4 5 6 7 
+Ice_Skeleton 1 2 3 4 5 6 7
+Poison_Spider 1 2 3 4 5 6 7
+Dark_Wizard 1 2 3 4 5 6 7
+Shadow_Beast 1 2 3 4 5 6 7
