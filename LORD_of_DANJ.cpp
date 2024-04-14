@@ -237,8 +237,8 @@ void Save_Game(const short LvlDanj, const HeroStat HeroGame) // Функция �
     const char* direct = "Save_LORD_of_DANJ\\Savegame.txt";
     if ((fopen_s(&Savegame, direct, "w")) == NULL)
     {
-        fprintf(Savegame, "%d ", LvlDanj);
-        fprintf(Savegame, "\n");
+        fprintf(Savegame, "%d ", LvlDanj); // можно удалить из сохранений и загрузок. но после окончательной проверки
+        fprintf(Savegame, "\n"); // можно удалить из сохранений и загрузок. но после окончательной проверки
         fprintf(Savegame, "%s ", HeroGame.NameHero);
         fprintf(Savegame, "%hd ", HeroGame.LvlHero);
         fprintf(Savegame, "%d ", HeroGame.PowerHero);
@@ -272,8 +272,8 @@ void Load_Game(short& LvlDanj, HeroStat& HeroGame) // (ЗАКОНЧИЛ / ПРО
     const char* direct = "Save_LORD_of_DANJ\\Savegame.txt";
     if ((fopen_s(&Loadgame, direct, "r")) == NULL)
     {
-        fscanf_s(Loadgame, "%hd ", &LvlDanj);
-        fscanf_s(Loadgame, "\n");
+        fscanf_s(Loadgame, "%hd ", &LvlDanj); // можно удалить из сохранений и загрузок. но после окончательной проверки
+        fscanf_s(Loadgame, "\n"); // можно удалить из сохранений и загрузок. но после окончательной проверки
         fscanf_s(Loadgame, "%s ", &HeroGame.NameHero, sizeof(HeroGame.NameHero));
         fscanf_s(Loadgame, "%hd ", &HeroGame.LvlHero);
         fscanf_s(Loadgame, "%d ", &HeroGame.PowerHero);
@@ -344,7 +344,7 @@ void Print_Mob_List(short SizeMobList, Monster* MobList) // Функция вы�
 Monster Recalculate_Mob(Monster* Moblist, int LvlDanj, int Index) // Функция расчета статов монстра, запускается перед боем после рандомного выбора монстра (ГОТОВА / НЕ ПРВОЕРЕНА)
 {
     --LvlDanj; // для первого уровня не будет пересчет основных статов
-    Monster MobBattle{};
+    Monster MobBattle = Moblist[Index];
     MobBattle.PowerMonster = Moblist[Index].PowerMonster + ((rand() % 2 + 1) * LvlDanj);
     MobBattle.DexterityMonster = Moblist[Index].DexterityMonster + ((rand() % 2 + 1) * LvlDanj);
     MobBattle.EnduranceMonster = Moblist[Index].EnduranceMonster + ((rand() % 2 + 1) * LvlDanj);
@@ -422,7 +422,7 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
             {
                 std::cout << MobBattle.NameMonster << " уварачивается от вашего удара" << std::endl;
             }
-            std::cout << "По результатам раунда " << i + 1 << " остаток жизней: " << HeroGame.NameHero << " - " << HealthHero << "; " << MobBattle.NameMonster << " - " << MobBattle.HealthMonster << std::endl << std::endl;
+            std::cout << "По результатам раунда " << i + 1 << " остаток жизней: " << HeroGame.NameHero << " = " << HealthHero << "; " << MobBattle.NameMonster << " = " << MobBattle.HealthMonster << std::endl << std::endl;
             // вставить паузу (5 сек будет достаточно) или по нажатию
         }
         if (HealthHero > 0 && MobBattle.HealthMonster <= 0)
@@ -447,6 +447,19 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
             HeroGame.FreePoints += 2;
             std::cout << "Ваш уровень повышен до " << HeroGame.LvlHero << std::endl;
             HeroGame = Recalculate_Hero(HeroGame); // перерасчет статов после повышения, очки будет распределить только в деревне (вне данжа)
+        }
+        if (HeroGame.WinBattle >= (HeroGame.WinBattle / LvlDanj) && HeroGame.WinBattle >= (5 * LvlDanj) && LvlDanj == HeroGame.FreePoints)
+        {
+            HeroGame.OpenLVLDanj++;
+            std::cout << "Вы открыли новый уровень данжа: " << HeroGame.OpenLVLDanj << std::endl;
+            bool Variable{};
+            std::cout << "Желаете перейти на новый уровень? Учтите на новом уровне более сильные монстры и вы возможно не сможете с ними справиться!. Ваш выбор: (1) Перейти. (0) Отказаться = ";
+            std::cin >> Variable;
+            switch (Variable)
+            {
+            case true:
+                LvlDanj++;
+            }
         }
         /* Также здесь прописать системную паузу, также и в каждом раунде*/
         std::cout << "Продожить исследование данжа (1) или венуться в деревню (0): ";
@@ -490,19 +503,32 @@ int main() // Вписать мейн с принимающими данными
             Menu_Main(LvlDanj, HeroGame);
             break;
         case 2:
+            if (HeroGame.OpenLVLDanj > 1)
+            {
+                std::cout << "У вас уже открыт уровень данжа с 1 по " << HeroGame.OpenLVLDanj << ". На какой руовень хотите спуститься? ";
+                do
+                {
+                    std::cin >> LvlDanj;
+                } while (LvlDanj > HeroGame.OpenLVLDanj);
+            }
             Battle_Monste_Hero(LvlDanj, HeroGame, SizeMobList, MobList);
             break;
         case 3:
             std::cout << "Магазин закрыт на переучет, приходите после обновления!" << std::endl;
             break;
         case 4:
-            std::cout << "У жителей нет для вас заданий. приходите после обновления!" << std::endl;
+            std::cout << "У жителей нет для вас заданий, приходите после обновления!" << std::endl;
             break;
         case 5:
-
-            break;
-        default:
-            break;
+            Print_Hero(HeroGame);
+            if (HeroGame.FreePoints > 0)
+            {
+                std::cout << "У вас есть свободные не распределенные очки = " << HeroGame.FreePoints << " Желаете их распределить? ДА(1) или НЕТ (0) ";
+                bool Ask{};
+                std::cin >> Ask;
+                if (Ask == true)
+                    Distr_Point_Hero(HeroGame);
+            }
         }
     } while (MenuVillage != 0);
 
