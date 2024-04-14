@@ -13,7 +13,7 @@
 struct Monster // Для начала будут созданы 5 монстров, надо будет также реализовать считывание данных по монстрам из файла // ЕЩЕ не доработано
 {
     char NameMonster[25];
-    short LvlMonster;
+    short LvlMonster; // пока не используется, на на будущее добавил
     // 6 базовых характеристик, на 1 лвл в сумме 16 и у каждого монстра по разному распределены. При повышении лвл будет добавлятся минимум в 2 раза больше чем при повышении лв героя
     int PowerMonster;
     int DexterityMonster; // Ловкость
@@ -53,6 +53,8 @@ struct HeroStat // Структура персонажа (героя)
     int HealthHero; // Количество жизней. (Можноли сразу в структуре прописать формулу расчета данного показателя или лучше в отдельной функции реализовать? (влияет Сила, Выносливость и уровень)
     int ScalExp; // Шкала опыта
     int ScalExpUp; // Сколько нужно уопыта набрать для нового уровня героя
+    short WinBattle; // счетчик побед героя без проигрыша (несгораемый уровень будет 5, 10, 15 и т.д.)
+    short OpenLVLDanj; // какой максимальный уровень дажна открыт у игрока
     // Позже можно добавить другие характеристики или выделить их в отдельную структуру доп характеристик
 };
 
@@ -87,6 +89,8 @@ void Print_Hero(HeroStat HeroGame) // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
     std::cout << "Количество здоровья: " << HeroGame.HealthHero << std::endl;
     std::cout << "Шкала текуцщего опыта: " << HeroGame.ScalExp << std::endl;
     std::cout << "Сколько опыта для перехода на новый уровень: " << HeroGame.ScalExpUp << std::endl;
+    std::cout << "счетчик побед пез проигрыша: " << HeroGame.WinBattle << std::endl;
+    std::cout << "Максимальный уровень дажа открытый у героя: " << HeroGame.OpenLVLDanj << std::endl;
 }
 
 void Menu_Main(short& LvlDanj, HeroStat& HeroGame, bool Start) // прописывать в функцию принимаемы данные или нет? или заменить тип на int с возможным выбором // Start = true если меню загружается пир старте программы
@@ -151,7 +155,7 @@ HeroStat Recalculate_Hero(HeroStat HeroGame) // Функция перерасч�
     HeroGame.Initiative = 0.03 * HeroGame.IntelligenceHero + 0.02 * HeroGame.WisdomHero + 0.01 * HeroGame.CharizmaHero;
     HeroGame.HealthHero = (10 * HeroGame.LvlHero) * (0.8 * HeroGame.PowerHero + 0.4 * HeroGame.EnduranceHero);
     HeroGame.ScalExpUp = 100;
-    for (int i = 0; i < HeroGame.LvlHero; i++)
+    for (int i = 1; i < HeroGame.LvlHero; i++)
     {
         HeroGame.ScalExpUp *= 1.5 * i;
     }
@@ -206,6 +210,8 @@ HeroStat Distr_Point_Hero(HeroStat HeroGame) // Функция распреде�
 HeroStat New_Game() // Функция ввода данных при старте (ЗАКОНЧИЛ / ПРОВЕРЕНО)
 {
     HeroStat HeroGame{ "Name", 1, 1, 1, 1, 1, 1, 1, 10 };
+    HeroGame.WinBattle = 0;
+    HeroGame.OpenLVLDanj = 1;
     char Y_N{};
     do
     {
@@ -234,7 +240,7 @@ void Save_Game(const short LvlDanj, const HeroStat HeroGame) // Функция �
         fprintf(Savegame, "%d ", LvlDanj);
         fprintf(Savegame, "\n");
         fprintf(Savegame, "%s ", HeroGame.NameHero);
-        fprintf(Savegame, "%d ", HeroGame.LvlHero);
+        fprintf(Savegame, "%hd ", HeroGame.LvlHero);
         fprintf(Savegame, "%d ", HeroGame.PowerHero);
         fprintf(Savegame, "%d ", HeroGame.DexterityHero);
         fprintf(Savegame, "%d ", HeroGame.EnduranceHero);
@@ -249,6 +255,8 @@ void Save_Game(const short LvlDanj, const HeroStat HeroGame) // Функция �
         fprintf(Savegame, "%d ", HeroGame.HealthHero);
         fprintf(Savegame, "%d ", HeroGame.ScalExp);
         fprintf(Savegame, "%d ", HeroGame.ScalExpUp);
+        fprintf(Savegame, "%hd ", HeroGame.WinBattle);
+        fprintf(Savegame, "%hd ", HeroGame.OpenLVLDanj);
     }
     else
         std::cout << "Ошибка создания сохранения!" << std::endl;
@@ -264,10 +272,10 @@ void Load_Game(short& LvlDanj, HeroStat& HeroGame) // (ЗАКОНЧИЛ / ПРО
     const char* direct = "Save_LORD_of_DANJ\\Savegame.txt";
     if ((fopen_s(&Loadgame, direct, "r")) == NULL)
     {
-        fscanf_s(Loadgame, "%d ", &LvlDanj);
+        fscanf_s(Loadgame, "%hd ", &LvlDanj);
         fscanf_s(Loadgame, "\n");
         fscanf_s(Loadgame, "%s ", &HeroGame.NameHero, sizeof(HeroGame.NameHero));
-        fscanf_s(Loadgame, "%d ", &HeroGame.LvlHero);
+        fscanf_s(Loadgame, "%hd ", &HeroGame.LvlHero);
         fscanf_s(Loadgame, "%d ", &HeroGame.PowerHero);
         fscanf_s(Loadgame, "%d ", &HeroGame.DexterityHero);
         fscanf_s(Loadgame, "%d ", &HeroGame.EnduranceHero);
@@ -282,6 +290,8 @@ void Load_Game(short& LvlDanj, HeroStat& HeroGame) // (ЗАКОНЧИЛ / ПРО
         fscanf_s(Loadgame, "%d ", &HeroGame.HealthHero);
         fscanf_s(Loadgame, "%d ", &HeroGame.ScalExp);
         fscanf_s(Loadgame, "%d ", &HeroGame.ScalExpUp);
+        fscanf_s(Loadgame, "&hd ", &HeroGame.WinBattle);
+        fscanf_s(Loadgame, "%hd ", &HeroGame.OpenLVLDanj);
     }
     else
         std::cout << "Ошибка загрузки" << std::endl;
@@ -331,64 +341,117 @@ void Print_Mob_List(short SizeMobList, Monster* MobList) // Функция вы�
     }
 }
 
-Monster Recalculate_Mob(Monster* Moblist, int LvlDanj, int Index) // Функция расчета статов монстра, запускается перед боем после рандомного выбора монстра
+Monster Recalculate_Mob(Monster* Moblist, int LvlDanj, int Index) // Функция расчета статов монстра, запускается перед боем после рандомного выбора монстра (ГОТОВА / НЕ ПРВОЕРЕНА)
 {
-    return *Moblist;
+    --LvlDanj; // для первого уровня не будет пересчет основных статов
+    Monster MobBattle{};
+    MobBattle.PowerMonster = Moblist[Index].PowerMonster + ((rand() % 2 + 1) * LvlDanj);
+    MobBattle.DexterityMonster = Moblist[Index].DexterityMonster + ((rand() % 2 + 1) * LvlDanj);
+    MobBattle.EnduranceMonster = Moblist[Index].EnduranceMonster + ((rand() % 2 + 1) * LvlDanj);
+    MobBattle.IntelligenceMonster = Moblist[Index].IntelligenceMonster + ((rand() % 2 + 1) * LvlDanj);
+    MobBattle.WisdomMonster = Moblist[Index].WisdomMonster + ((rand() % 2 + 1) * LvlDanj);
+    MobBattle.CharizmaMonster = Moblist[Index].CharizmaMonster + ((rand() % 2 + 1) * LvlDanj);
+    MobBattle.MinDamage = 1 * MobBattle.PowerMonster;
+    MobBattle.MaxDamage = 1.5 * MobBattle.PowerMonster;
+    MobBattle.Parrying = 0.1 * MobBattle.DexterityMonster + 0.02 * MobBattle.WisdomMonster;
+    MobBattle.Initiative = 0.03 * MobBattle.IntelligenceMonster + 0.02 * MobBattle.WisdomMonster + 0.01 * MobBattle.CharizmaMonster;
+    MobBattle.HealthMonster = (10 * ++LvlDanj) * (0.8 * MobBattle.PowerMonster + 0.4 * MobBattle.EnduranceMonster);
+
+    return MobBattle;
 }
 
-int Damage_Battle(int MinDamage, int MaxDamage, double Initiative) // Функция расчета урона с учетом инициативы
+int Damage_Battle(int MinDamage, int MaxDamage, double Initiative) // Функция расчета урона с учетом инициативы (ГОТОВА / НЕ ПРВОЕРЕНА)
 {
     int Damage = rand() % (MaxDamage - MinDamage) + MinDamage;
     return (Damage + Damage * Initiative);
 }
 
-bool Parrying_Battle(double Parrying, int Lvl) // Функция просчитывания шанса уклониться от удара
+bool Parrying_Battle(double Parrying, int Lvl) // Функция просчитывания шанса уклониться от удара (ГОТОВА / НЕ ПРВОЕРЕНА)
 {
     if (rand() % 30/10 <= Parrying / Lvl)
         return true;
     return false;
 }
 
-void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobList, Monster* Moblist) // Функция битвы. Надо добавить и проработать счетчик побед для перехода на другой уровень Данжа
+void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobList, Monster* const Moblist) // Функция битвы. (ГОТОВА / НЕ ПРВОЕРЕНА)
 {
+    bool Begin{ true };
+    while (Begin == true)
     {
         int Index = rand() % SizeMobList; // Рандобный выбор Монстра с которым будет битва
-        Recalculate_Mob(Moblist, LvlDanj, Index); // Генерирует статы монстра исходя из уровня данжа
+        Monster MobBattle = Recalculate_Mob(Moblist, LvlDanj, Index); // Генерирует статы монстра исходя из уровня данжа
+        // временный вывод статов монстра для проверки
         int HealthHero = HeroGame.HealthHero; // Характеристика показывающая количество жизней героя в течение боя
-        std::cout << "Пробираясь по Подземелью " << LvlDanj << " уровня, вы повстречали монстра " << Moblist[Index].NameMonster << ".\nПриготовьтесь к битве!!!" << std::endl;
-        for (int i = 0; HealthHero > 0 && Moblist[Index].HealthMonster > 0; i++)
+        std::cout << "Пробираясь по Подземелью " << LvlDanj << " уровня, вы повстречали монстра " << MobBattle.NameMonster << ".\nПриготовьтесь к битве!!!" << std::endl;
+        int Damage{}; // нанесенный урон
+        int ExpBattle{}; // начисляемый опыт в результате боя
+        for (int i = 0; HealthHero > 0 && MobBattle.HealthMonster > 0; i++)
         {
-            if (HeroGame.Initiative >= Moblist[Index].Initiative && i == 0)
+            if (HeroGame.Initiative >= MobBattle.Initiative && i == 0)
             {
-                if (Parrying_Battle(Moblist[Index].Parrying, LvlDanj) == false)
+                if (Parrying_Battle(MobBattle.Parrying, LvlDanj) == false)
                 {
-                    std::cout << "Вы имеет преимущество и атакуете первым и наносите " << Moblist[Index].NameMonster;
-                    std::cout << " увеличенный урон равный - " << Damage_Battle(HeroGame.MinDamage, HeroGame.MaxDamage, HeroGame.Initiative) << std::endl;
-                    // сдесь расчет оставшейся жизни героя, надо еще продумать как выводить текущие уровни жизней участников боя, после каждого удара или после каждого раунда?
+                    Damage = Damage_Battle(HeroGame.MinDamage, HeroGame.MaxDamage, HeroGame.Initiative);
+                    std::cout << "Вы имеет преимущество и атакуете первым и наносите " << MobBattle.NameMonster;
+                    std::cout << " увеличенный урон равный - " << Damage << std::endl;
+                    MobBattle.HealthMonster -= Damage;
                 }
                 else
                 {
-                    std::cout << "Имея преимущество в скрытности, вы подкрадываетесь и атакуете " << Moblist[Index].NameMonster;
+                    std::cout << "Имея преимущество в скрытности, вы подкрадываетесь и атакуете " << MobBattle.NameMonster;
                     std::cout << ", но Он в последний момент замечает вашу атаку и уворачивается" << std::endl;
                 }
             }
             if (Parrying_Battle(HeroGame.Parrying, HeroGame.LvlHero) == false)
             {
-                std::cout << Moblist[Index].NameMonster << " наносит вам урон - " << Damage_Battle(Moblist[Index].MinDamage, Moblist[Index].MaxDamage, Moblist[Index].Initiative) << std::endl;
-                // сдесь расчет оставшейся жизни героя, надо еще продумать как выводить текущие уровни жизней участников боя, после каждого удара или после каждого раунда?
+                Damage = Damage_Battle(MobBattle.MinDamage, MobBattle.MaxDamage, MobBattle.Initiative);
+                std::cout << MobBattle.NameMonster << " наносит вам урон - " << Damage << std::endl;
+                HealthHero -= Damage;
             }
             else
             {
-                std::cout << "Вам удается увернуться от удара " << Moblist[Index].NameMonster << std::endl;
+                std::cout << "Вам удается увернуться от удара " << MobBattle.NameMonster << std::endl;
             }
-            //Дописать удар героя и после выписать статистику раунда взаимных ударов при условии что у обоих остались жизни!!!
+            if (Parrying_Battle(MobBattle.Parrying, LvlDanj) == false)
+            {
+                Damage = Damage_Battle(HeroGame.MinDamage, HeroGame.MaxDamage, HeroGame.Initiative);
+                std::cout << "Вы наносите " << Damage << " урона " << MobBattle.NameMonster << std::endl;
+                MobBattle.HealthMonster -= Damage;
+            }
+            else
+            {
+                std::cout << MobBattle.NameMonster << " уварачивается от вашего удара" << std::endl;
+            }
+            std::cout << "По результатам раунда " << i + 1 << " остаток жизней: " << HeroGame.NameHero << " - " << HealthHero << "; " << MobBattle.NameMonster << " - " << MobBattle.HealthMonster << std::endl << std::endl;
+            // вставить паузу (5 сек будет достаточно) или по нажатию
         }
-        //Записать резултаты проигрыша или победы.
-        //По результатам победы насчитать опыт исходя из уровня данжа.
-        //Сбросить счетчик побед до 0 (5, 10, 15 это несгораемые поеды и переход на новый уровень зависит от количества побед - например с 1 на 2 требуется 5 побед, с 2 по 3 уже 15 побед и т.д.)
-        //Также прописать условие если ЛВЛ героя повышен и пересчитать статы
-
+        if (HealthHero > 0 && MobBattle.HealthMonster <= 0)
+        {
+            std::cout << "Поздравляю. вы победили в честном бою " << MobBattle.NameMonster << std::endl;
+            ExpBattle = 10 + ((LvlDanj - 1) * 3);
+            std::cout << "За победу вам начислено " << ExpBattle << " опыта" << std::endl;
+            HeroGame.ScalExp += ExpBattle;
+            HeroGame.WinBattle++;
+        }
+        else if (HealthHero <= 0 && MobBattle.HealthMonster > 0)
+        {
+            HeroGame.WinBattle -= (HeroGame.WinBattle % 5);
+            std::cout << "Вы проиграли и ваш счетчик побед сброшен до " << HeroGame.WinBattle << std::endl;
+        }
+        else
+            std::cout << "Бой завершился в нечью" << std::endl;
+        if (HeroGame.ScalExp >= HeroGame.ScalExpUp)
+        {
+            HeroGame.ScalExp = (HeroGame.ScalExp % HeroGame.ScalExpUp);
+            HeroGame.LvlHero++;
+            HeroGame.FreePoints += 2;
+            std::cout << "Ваш уровень повышен до " << HeroGame.LvlHero << std::endl;
+            HeroGame = Recalculate_Hero(HeroGame); // перерасчет статов после повышения, очки будет распределить только в деревне (вне данжа)
+        }
         /* Также здесь прописать системную паузу, также и в каждом раунде*/
+        std::cout << "Продожить исследование данжа (1) или венуться в деревню (0): ";
+        std::cin >> Begin;
+        // прописать очистку консоли для следующей битвы
     }
 }
 
@@ -407,7 +470,41 @@ int main() // Вписать мейн с принимающими данными
     //MobList = new Monster[SizeMobList]{}; //Массив монстров загружаемый из файла при старте игры
     //реализовать функцию считывания данных из файла со списком Монстров, первые данные в файле это SizeMobList.
     Menu_Main(LvlDanj, HeroGame, true); // запуск главного меню. Надо вписать все входные данные
+    int MenuVillage{};
+    do
+    {
+        std::cout << "Приветсвтуем тебя герой в Нашей деревне, сдесь вы можете отдохнуть от битв. От сюда направиться в данж для его очистки от монстров.";
+        std::cout << " Продать свойю лут и приобрести экипировку у трговцев(пока не доступно).Получить задание от жителей на убийство определенных монстров (Пока не доступно)." << std::endl << std::endl;
+        std::cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << std::endl << std::endl;
+        std::cout << "\t\t\tГлавное меню - 1" << std::endl << std::endl;
+        std::cout << "\t\t\tОтправиться в данж - 2" << std::endl << std::endl;
+        std::cout << "\t\t\tПосетить магазины - 3" << std::endl << std::endl;
+        std::cout << "\t\t\tПообщаться с жителями - 4" << std::endl << std::endl;
+        std::cout << "\t\t\tПроверить свою статистику - 5" << std::endl << std::endl;
+        std::cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << std::endl << std::endl;
+        std::cout << "Сделайте свой выбор: ";
+        std::cin >> MenuVillage;
+        switch (MenuVillage)
+        {
+        case 1:
+            Menu_Main(LvlDanj, HeroGame);
+            break;
+        case 2:
+            Battle_Monste_Hero(LvlDanj, HeroGame, SizeMobList, MobList);
+            break;
+        case 3:
+            std::cout << "Магазин закрыт на переучет, приходите после обновления!" << std::endl;
+            break;
+        case 4:
+            std::cout << "У жителей нет для вас заданий. приходите после обновления!" << std::endl;
+            break;
+        case 5:
 
+            break;
+        default:
+            break;
+        }
+    } while (MenuVillage != 0);
 
     Print_Hero(HeroGame); // Временный вывод для проверки
     Menu_Main(LvlDanj, HeroGame);
