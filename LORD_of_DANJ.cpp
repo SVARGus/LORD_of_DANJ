@@ -70,6 +70,12 @@ HeroStat New_Game();
 void Save_Game(const short LvlDanj, const HeroStat HeroGame); // Дописать вводные данные
 void Load_Game(short& LvlDanj, HeroStat& HeroGame);
 void Load_Mob_List(short& SizeMobList, Monster*& MobList);
+void Print_Mob_List(short SizeMobList, Monster* MobList);
+Monster Recalculate_Mob(Monster* Moblist, int LvlDanj, int Index);
+int Damage_Battle(int MinDamage, int MaxDamage, double Initiative);
+bool Parrying_Battle(double Parrying, int Lvl);
+void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobList, Monster* const Moblist);
+
 
 
 /*      Тело функций        */
@@ -339,8 +345,6 @@ void Load_Mob_List(short& SizeMobList, Monster*& MobList) // (ЗАКОНЧИЛ /
     Sleep(3000); // Системная пауза в 3 сек
     system("cls"); // очистка консоли
 }
-
-// Ниже функции на этапе написания, в прототипы еще не добавлены!!!
 
 void Print_Mob_List(short SizeMobList, Monster* MobList) // Функция вывода данных по монстрам - временно для проверки
 {
