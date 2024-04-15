@@ -7,6 +7,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
+#include <chrono> 
+#include <Windows.h>
 
 /*      Перечень структур       */
 
@@ -21,7 +23,7 @@ struct Monster // Для начала будут созданы 5 монстро
     int IntelligenceMonster; // Интилект
     int WisdomMonster; // Мудрость
     int CharizmaMonster; // Харизма
-    
+
     // Характеристики которые расчитываются на основе 5 базовых статов (Сила, Ловкость...)
     int MinDamage; // Влияет Сила
     int MaxDamage; // Влияет Сила
@@ -95,6 +97,7 @@ void Print_Hero(HeroStat HeroGame) // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
 
 void Menu_Main(short& LvlDanj, HeroStat& HeroGame, bool Start) // прописывать в функцию принимаемы данные или нет? или заменить тип на int с возможным выбором // Start = true если меню загружается пир старте программы
 {
+    system("cls"); // очистка консоли
     enum MENU { NEWGAME = 1, LOAD, SAVE, BACK, EXIT = 0 }; // Очень удобно использовать в меню, VS сам подставляет варианты меню согласно списку енама
     int Menu{};
     std::cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << std::endl << std::endl;;
@@ -209,6 +212,7 @@ HeroStat Distr_Point_Hero(HeroStat HeroGame) // Функция распреде�
 
 HeroStat New_Game() // Функция ввода данных при старте (ЗАКОНЧИЛ / ПРОВЕРЕНО)
 {
+    system("cls"); // очистка консоли
     HeroStat HeroGame{ "Name", 1, 1, 1, 1, 1, 1, 1, 10 };
     HeroGame.WinBattle = 0;
     HeroGame.OpenLVLDanj = 1;
@@ -264,6 +268,8 @@ void Save_Game(const short LvlDanj, const HeroStat HeroGame) // Функция �
         std::cout << "Ошибка при сохранение!" << std::endl;
     else
         std::cout << "УСПЕШНОЕ СОХРАНЕНИЕ" << std::endl;
+    Sleep(3000); // Системная пауза в 3 сек
+    system("cls"); // очистка консоли
 }
 
 void Load_Game(short& LvlDanj, HeroStat& HeroGame) // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
@@ -299,6 +305,8 @@ void Load_Game(short& LvlDanj, HeroStat& HeroGame) // (ЗАКОНЧИЛ / ПРО
         std::cout << "Ошибка при Загрузке!" << std::endl;
     else
         std::cout << "ИГРА УСПЕШНО ЗАГРУЖЕНА" << std::endl;
+    Sleep(3000); // Системная пауза в 3 сек
+    system("cls"); // очистка консоли
 }
 
 void Load_Mob_List(short& SizeMobList, Monster*& MobList) // (ЗАКОНЧИЛ / ПРОВЕРЕНО) Осталось только базу п\монстров подкорректировать
@@ -328,6 +336,8 @@ void Load_Mob_List(short& SizeMobList, Monster*& MobList) // (ЗАКОНЧИЛ /
         std::cout << "Ошибка закрытия файла с данными монстров" << std::endl;
     else
         std::cout << "База Монстров успешно загружена!!!" << std::endl;
+    Sleep(3000); // Системная пауза в 3 сек
+    system("cls"); // очистка консоли
 }
 
 // Ниже функции на этапе написания, в прототипы еще не добавлены!!!
@@ -368,7 +378,7 @@ int Damage_Battle(int MinDamage, int MaxDamage, double Initiative) // Функц
 
 bool Parrying_Battle(double Parrying, int Lvl) // Функция просчитывания шанса уклониться от удара (ГОТОВА / НЕ ПРВОЕРЕНА)
 {
-    if (rand() % 30/10 <= Parrying / Lvl)
+    if (rand() % 30 / 10 <= Parrying / Lvl)
         return true;
     return false;
 }
@@ -380,7 +390,6 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
     {
         int Index = rand() % SizeMobList; // Рандобный выбор Монстра с которым будет битва
         Monster MobBattle = Recalculate_Mob(Moblist, LvlDanj, Index); // Генерирует статы монстра исходя из уровня данжа
-        // временный вывод статов монстра для проверки
         int HealthHero = HeroGame.HealthHero; // Характеристика показывающая количество жизней героя в течение боя
         std::cout << "Пробираясь по Подземелью " << LvlDanj << " уровня, вы повстречали монстра " << MobBattle.NameMonster << ".\nПриготовьтесь к битве!!!" << std::endl;
         int Damage{}; // нанесенный урон
@@ -401,6 +410,7 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
                     std::cout << "Имея преимущество в скрытности, вы подкрадываетесь и атакуете " << MobBattle.NameMonster;
                     std::cout << ", но Он в последний момент замечает вашу атаку и уворачивается" << std::endl;
                 }
+                Sleep(1000);
             }
             if (Parrying_Battle(HeroGame.Parrying, HeroGame.LvlHero) == false)
             {
@@ -412,6 +422,7 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
             {
                 std::cout << "Вам удается увернуться от удара " << MobBattle.NameMonster << std::endl;
             }
+            Sleep(1000);
             if (Parrying_Battle(MobBattle.Parrying, LvlDanj) == false)
             {
                 Damage = Damage_Battle(HeroGame.MinDamage, HeroGame.MaxDamage, HeroGame.Initiative);
@@ -422,16 +433,23 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
             {
                 std::cout << MobBattle.NameMonster << " уварачивается от вашего удара" << std::endl;
             }
+            Sleep(1000);
             std::cout << "По результатам раунда " << i + 1 << " остаток жизней: " << HeroGame.NameHero << " = " << HealthHero << "; " << MobBattle.NameMonster << " = " << MobBattle.HealthMonster << std::endl << std::endl;
+            Sleep(1000);
             // вставить паузу (5 сек будет достаточно) или по нажатию
         }
         if (HealthHero > 0 && MobBattle.HealthMonster <= 0)
         {
             std::cout << "Поздравляю. вы победили в честном бою " << MobBattle.NameMonster << std::endl;
+            Sleep(500);
             ExpBattle = 10 + ((LvlDanj - 1) * 3);
             std::cout << "За победу вам начислено " << ExpBattle << " опыта" << std::endl;
+            Sleep(500);
             HeroGame.ScalExp += ExpBattle;
-            HeroGame.WinBattle++;
+            if (HeroGame.WinBattle < LvlDanj * 5)
+                HeroGame.WinBattle++;
+            std::cout << "Счетчик побед составляет = " << HeroGame.WinBattle << std::endl;
+            Sleep(500);
         }
         else if (HealthHero <= 0 && MobBattle.HealthMonster > 0)
         {
@@ -448,23 +466,20 @@ void Battle_Monste_Hero(short& LvlDanj, HeroStat& HeroGame, const short SizeMobL
             std::cout << "Ваш уровень повышен до " << HeroGame.LvlHero << std::endl;
             HeroGame = Recalculate_Hero(HeroGame); // перерасчет статов после повышения, очки будет распределить только в деревне (вне данжа)
         }
-        if (HeroGame.WinBattle >= (HeroGame.WinBattle / LvlDanj) && HeroGame.WinBattle >= (5 * LvlDanj) && LvlDanj == HeroGame.FreePoints)
+        if (HeroGame.WinBattle >= (HeroGame.WinBattle / LvlDanj) && HeroGame.WinBattle >= (5 * LvlDanj) && LvlDanj == HeroGame.OpenLVLDanj)
         {
             HeroGame.OpenLVLDanj++;
             std::cout << "Вы открыли новый уровень данжа: " << HeroGame.OpenLVLDanj << std::endl;
             bool Variable{};
             std::cout << "Желаете перейти на новый уровень? Учтите на новом уровне более сильные монстры и вы возможно не сможете с ними справиться!. Ваш выбор: (1) Перейти. (0) Отказаться = ";
             std::cin >> Variable;
-            switch (Variable)
-            {
-            case true:
+            if (Variable == true)
                 LvlDanj++;
-            }
         }
         /* Также здесь прописать системную паузу, также и в каждом раунде*/
         std::cout << "Продожить исследование данжа (1) или венуться в деревню (0): ";
         std::cin >> Begin;
-        // прописать очистку консоли для следующей битвы
+        system("cls");
     }
 }
 
@@ -486,6 +501,7 @@ int main() // Вписать мейн с принимающими данными
     int MenuVillage{};
     do
     {
+        system("cls");
         std::cout << "Приветсвтуем тебя герой в Нашей деревне, сдесь вы можете отдохнуть от битв. От сюда направиться в данж для его очистки от монстров.";
         std::cout << " Продать свойю лут и приобрести экипировку у трговцев(пока не доступно).Получить задание от жителей на убийство определенных монстров (Пока не доступно)." << std::endl << std::endl;
         std::cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << std::endl << std::endl;
@@ -503,6 +519,7 @@ int main() // Вписать мейн с принимающими данными
             Menu_Main(LvlDanj, HeroGame);
             break;
         case 2:
+            system("cls");
             if (HeroGame.OpenLVLDanj > 1)
             {
                 std::cout << "У вас уже открыт уровень данжа с 1 по " << HeroGame.OpenLVLDanj << ". На какой руовень хотите спуститься? ";
@@ -514,12 +531,17 @@ int main() // Вписать мейн с принимающими данными
             Battle_Monste_Hero(LvlDanj, HeroGame, SizeMobList, MobList);
             break;
         case 3:
+            system("cls");
             std::cout << "Магазин закрыт на переучет, приходите после обновления!" << std::endl;
+            Sleep(3000);
             break;
         case 4:
+            system("cls");
             std::cout << "У жителей нет для вас заданий, приходите после обновления!" << std::endl;
+            Sleep(3000);
             break;
         case 5:
+            system("cls");
             Print_Hero(HeroGame);
             if (HeroGame.FreePoints > 0)
             {
@@ -529,11 +551,9 @@ int main() // Вписать мейн с принимающими данными
                 if (Ask == true)
                     Distr_Point_Hero(HeroGame);
             }
+            Sleep(5000);
         }
     } while (MenuVillage != 0);
-
-    Print_Hero(HeroGame); // Временный вывод для проверки
-    Menu_Main(LvlDanj, HeroGame);
 
     return 0;
 }
