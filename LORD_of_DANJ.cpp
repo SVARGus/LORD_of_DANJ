@@ -63,7 +63,7 @@ struct HeroStat // Структура персонажа (героя)
 /*      Перечень прототипов функций     */
 
 void Print_Hero(HeroStat HeroGame);
-void Menu_Main(short& LvlDanj, HeroStat& HeroGame, bool Start = false);
+void Menu_Main(short& LvlDanj, HeroStat& HeroGame,int *MenuVillage, bool Start = false);
 HeroStat Recalculate_Hero(HeroStat HeroGame);
 HeroStat Distr_Point_Hero(HeroStat HeroGame);
 HeroStat New_Game();
@@ -101,7 +101,7 @@ void Print_Hero(HeroStat HeroGame) // (ЗАКОНЧИЛ / ПРОВЕРЕНО)
     std::cout << "Максимальный уровень дажа открытый у героя: " << HeroGame.OpenLVLDanj << std::endl;
 }
 
-void Menu_Main(short& LvlDanj, HeroStat& HeroGame, bool Start) // прописывать в функцию принимаемы данные или нет? или заменить тип на int с возможным выбором // Start = true если меню загружается пир старте программы
+void Menu_Main(short& LvlDanj, HeroStat& HeroGame, int *MenuVillage, bool Start) // прописывать в функцию принимаемы данные или нет? или заменить тип на int с возможным выбором // Start = true если меню загружается пир старте программы
 {
     system("cls"); // очистка консоли
     enum MENU { NEWGAME = 1, LOAD, SAVE, BACK, EXIT = 0 }; // Очень удобно использовать в меню, VS сам подставляет варианты меню согласно списку енама
@@ -147,7 +147,9 @@ void Menu_Main(short& LvlDanj, HeroStat& HeroGame, bool Start) // прописы
             break;
         case EXIT:
             std::cout << "\n\t\tСпасибо за игру! Будем вас ждать снова!\n\n";
-            exit(0); // Завершение программы. Для этого подключил библиотеку <stdlib.h>, она является стандартной и возможно не требует отдельного подключения
+            *MenuVillage = 0;
+            return;
+            //exit(0); // Завершение программы. Для этого подключил библиотеку <stdlib.h>, она является стандартной и возможно не требует отдельного подключения
             break;
         default:
             std::cout << "Некорректный выбор, повторите: ";
@@ -501,8 +503,8 @@ int main() // Вписать мейн с принимающими данными
     //Print_Mob_List(SizeMobList, MobList); // Временная функция для проверки загрузки массива структурных данных
     //MobList = new Monster[SizeMobList]{}; //Массив монстров загружаемый из файла при старте игры
     //реализовать функцию считывания данных из файла со списком Монстров, первые данные в файле это SizeMobList.
-    Menu_Main(LvlDanj, HeroGame, true); // запуск главного меню. Надо вписать все входные данные
     int MenuVillage{};
+    Menu_Main(LvlDanj, HeroGame, &MenuVillage, true); // запуск главного меню. Надо вписать все входные данные
     do
     {
         system("cls");
@@ -520,7 +522,7 @@ int main() // Вписать мейн с принимающими данными
         switch (MenuVillage)
         {
         case 1:
-            Menu_Main(LvlDanj, HeroGame);
+            Menu_Main(LvlDanj, HeroGame, &MenuVillage);
             break;
         case 2:
             system("cls");
@@ -558,6 +560,7 @@ int main() // Вписать мейн с принимающими данными
             Sleep(5000);
         }
     } while (MenuVillage != 0);
+    //delete[]MobList;
 
     return 0;
 }
