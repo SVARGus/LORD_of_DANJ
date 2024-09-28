@@ -11,20 +11,24 @@ class MainCharacteristic
 protected:
 	string name{}; // Имя
 	int lvl{}; // Уровень
-	int pover{}; // Сила
+	int power{}; // Сила
 	int dexterity{}; // Ловкость
 	int endurance{}; // Выносливость
-	int intellogence{}; // интелект
-	int wisdon{}; // Мудрость
+	int intelligence{}; // интелект
+	int wisdom{}; // Мудрость
 	int charizma{}; // Харизма
 	int minDamage{}; // минимальный урон
 	int maxDamage{}; // максимальный урон
 	double parrying{}; // уклон от атаки
 	double initiative{}; // Инициатива в бою
-	int health{}; // здоровье
+	int maxHealth{}; // Максимальное здоровье
+	int health{}; // Текущий уровень жизни
 	// Позже дописать дополнительне характеристики которые будут общие для игрока и монстров
+
+	MainCharacteristic() {} // Конструктор по умолчанию
+	MainCharacteristic(string name) : name{ name }, lvl{ 1 }, power{ 1 }, dexterity{ 1 }, endurance{ 1 }, intelligence{ 1 }, wisdom{ 1 }, charizma{ 1 } {} // конструктор для нследников
 public:
-	virtual ~MainCharacteristic() = 0; // чисто вирутайльный деструктор
+	virtual ~MainCharacteristic() {}; // чисто вирутайльный деструктор
 	virtual void recalculateCharacteristic() = 0; // расчет и пересчет характеристик, каждый наследник сам реализует
 	virtual void displayCharacteristic() const = 0; // Вывод характеристик на экран, каждый наследник сам реализует
 	virtual int attack() = 0; // Расчет выдаваемого урона в битве
@@ -32,15 +36,33 @@ public:
 	// Геттеры переменных
 	string getName() const { return name; }
 	int getLvl() const { return lvl; }
-	int getPover() const { return pover; }
+	int getPower() const { return power; }
 	int getDexterity() const { return dexterity; }
 	int getEndurance() const { return endurance; }
-	int getIntellogence() const { return intellogence; }
-	int getWisdon() const { return wisdon; }
+	int getIntelligence() const { return intelligence; }
+	int getWisdon() const { return wisdom; }
 	int getMinDamage() const { return minDamage; }
 	int getMaxDamage() const { return maxDamage; }
 	double getParrying() const { return parrying; }
 	double getInitiative() const { return initiative; }
+	int getMaxHealth() const { return maxHealth; }
 	int getHealth() const { return health; }
+	// Сеттеры, если требуются
+	void setHealth(int Health) { health = Health; } // Изменение текущего уровня здоровья
+	// Реализованные методы общие для наследников
+	void displayMainCharacteristic() const;
 };
 
+void MainCharacteristic::displayMainCharacteristic() const{
+	cout << "Сила: " << power << endl;
+	cout << "Ловкость: " << dexterity << endl;
+	cout << "Выносливость: " << endurance << endl;
+	cout << "Интелект: " << intelligence << endl;
+	cout << "Мудрость: " << wisdom << endl;
+	cout << "Харизма: " << charizma << endl;
+	cout << "\t<<   ---   Урон   ---   >>" << endl;
+	cout << "Минимальный: " << minDamage << "\tМаксимальный: " << maxDamage << endl;
+	cout << "\t<<   ---   Дополнительные характеристики   ---   >>" << endl;
+	cout << "Уклонение: " << parrying << endl;
+	cout << "Инициатива: " << initiative << endl;
+}
