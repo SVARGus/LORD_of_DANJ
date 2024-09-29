@@ -6,6 +6,7 @@ using std::endl;
 using std::cin;
 using std::string;
 
+
 class MainCharacteristic
 {
 protected:

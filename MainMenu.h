@@ -1,11 +1,18 @@
 #pragma once
+#include <iostream>
 #include "MainCharacteristic.h"
 #include "Hero.h"
+#include <fstream>
+#include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
+#include <Windows.h>
 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
+using std::fstream;
+using std::ifstream;
+using std::ofstream;
 
 class MainMenu
 {
@@ -41,9 +48,11 @@ void MainMenu::selectMainMenu() {
     {
     case NEWGAME:
         newGame();
+        // return Village // надо проработать возврат в деревню чтоб избежать рекурсии (также возможно стоит создать деревню в самом начале в теле программы, чтоб уже передать ее в телео программы (или подумать как вызывать напрямую, но без использования паттерна Singletone
         break;
     case LOAD:
         loadGame();
+        // return Village // надо проработать возврат в деревню чтоб избежать рекурсии (также возможно стоит создать деревню в самом начале в теле программы, чтоб уже передать ее в телео программы (или подумать как вызывать напрямую, но без использования паттерна Singletone
         break;
         if (gameRunning)
         {
@@ -60,28 +69,89 @@ void MainMenu::selectMainMenu() {
     case EXIT:
         exitGame();
         //cout << "\n\t\tСпасибо за игру! Будем вас ждать снова!\n\n";
-        //*MenuVillage = 0;
-        //exit(0); // Завершение программы. Для этого подключил библиотеку <stdlib.h>, она является стандартной и возможно не требует отдельного подключения
         break;
     default:
         cout << "Некорректный выбор ";
     }
 }
 void MainMenu::newGame() {
+    Hero& player = Hero::getInstance();
+    char Y_N{};
+    do
+    {
+        cout << "Введите ваш Ник: ";
+        cin >> player.name;
+        cout << "Ваш ник: " << player.getName() << endl;
+        cout << "Подтверждаете выбор? ДА(Y) - НЕТ(N) ";
+        cin >> Y_N;
+    } while (Y_N == 'N' || Y_N == 'n');
+    while (player.getFreepoints() > 0)
+    {
+        player.distrPointHero();
+    }
+    player.recalculateCharacteristic();
+    // далее должен быть переход в класс деревня с выходом из Главного меню (надо подумать как реализовать)
 
+
+    gameRunning = true; // подымаем флаг запуска игровой сессии
 }
-void MainMenu::loadGame() {
+void MainMenu::loadGame() { // позже выбрать один вариант Загрузки и Сохранения
+    const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
+    const string textDirect{ "Save_LORD_of_DANJ\\Savegame.txt" };
 
+    ifstream myFileBinary(binaryDirect, std::ios::binary);
+    if (myFileBinary.is_open())
+    {
+        Hero& player = Hero::getInstance();
+        player.loadFromBinary(myFileBinary);
+        myFileBinary.close();
+        cout << "Игра загружена из Бинарного файла!" << endl;
+    }
+
+    ifstream myFileText(textDirect);
+    if (myFileText.is_open())
+    {
+        Hero& player = Hero::getInstance();
+        player.loadFromText(myFileText);
+        myFileText.close();
+        cout << "Игра загружена из Текстового файла!" << endl;
+    }
+    gameRunning = true; // подымаем флаг запуска игровой сессии
 }
-void MainMenu::saveGame() {
+void MainMenu::saveGame() { // позже выбрать один вариант Загрузки и Сохранения
+    //ofstream myFile;
+    std::filesystem::path SaveGame = "Save_LORD_of_DANJ"; // Создаем папку для сохранения
+    if (!std::filesystem::exists(SaveGame))
+        std::filesystem::create_directories(SaveGame);
 
+    const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
+    const string textDirect{ "Save_LORD_of_DANJ\\Savegame.txt" };
+
+    ofstream myFileBinary(binaryDirect, std::ios::binary | std::ios::trunc);
+    if (myFileBinary.is_open())
+    {
+        Hero& player = Hero::getInstance();
+        player.saveToBinary(myFileBinary);
+        myFileBinary.close();
+        cout << "Игра сохраненена в Бинарный файл!" << endl; 
+    }
+
+    ofstream myFileText(textDirect, std::ios::trunc);
+    if (myFileText.is_open())
+    {
+        Hero& player = Hero::getInstance();
+        player.saveToText(myFileText);
+        myFileText.close();
+        cout << "Игра сохраненена в Текстовый файл!" << endl;
+    }
 }
 void MainMenu::backToGame() {
-
+    // также подумать как вернуться в игровую ссесию, в данном случае возврат в класс Деревня и выход из гласного меню
 }
 void MainMenu::aboutGame() {
 
 }
 void MainMenu::exitGame() {
-
+    cout << "\n\t\tСпасибо за игру! Будем вас ждать снова!\n\n";
+    exit(0);
 }
