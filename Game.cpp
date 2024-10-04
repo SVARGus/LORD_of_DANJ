@@ -1,5 +1,11 @@
 #include "Game.h"
+#include "MainMenu.h"
 
+Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { mainMenu = new MainMenu(this); cout << "creat Game" << endl; }
+Game::~Game() { 
+	cout << "Delete" << endl;
+	delete mainMenu; 
+}
 void Game::run() {
 	while (currentState != EXIT)
 	{
@@ -10,6 +16,7 @@ void Game::run() {
 			mainMenu->selectMainMenu();
 			break;
 		case VILLAGE:
+			cout << "Village" << endl;
 			break;
 		case TAVERN:
 			break;

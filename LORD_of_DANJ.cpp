@@ -23,7 +23,7 @@ int main()
     setlocale(LC_ALL, "ru");
     srand(time(NULL));
 
-    Game& newGame = Game::getInstance();
+    Game &newGame = Game::getInstance();
     newGame.run();
 
 

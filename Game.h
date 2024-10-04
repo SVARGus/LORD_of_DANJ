@@ -2,7 +2,7 @@
 #include <iostream>
 //#include "MainCharacteristic.h"
 //#include "Hero.h"
-#include "MainMenu.h"
+//#include "MainMenu.h"
 //#include <fstream>
 //#include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
 //#include <Windows.h>
@@ -15,17 +15,21 @@ using std::string;
 //using std::ifstream;
 //using std::ofstream;
 
+class MainMenu;
+
 class Game // Класс реализован по паттерну Singleton, так как игровой цикл может быть только один
 {
 public:
 	enum State { MAIN_MENU, VILLAGE, TAVERN, SHOP, DANJ, EXIT };
 private:
-	MainMenu* mainMenu = new MainMenu{}; // Гдето-тут ошибка???
+	MainMenu* mainMenu; // Гдето-тут ошибка???
 	State currentState; // Текущее состояние
 	State previousState; // Предыдущее состояние для возможности возврата
-	Game() : currentState{MAIN_MENU}, previousState{MAIN_MENU}{}
+	Game();
+	~Game();
 	Game(const Game&) = delete;
 	void operator=(const Game&) = delete;
+	//static Game* instance;
 public:
 	static Game& getInstance() {
 		static Game instance;
