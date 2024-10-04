@@ -1,12 +1,15 @@
 #include "Game.h"
 #include "MainMenu.h"
 
-Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { mainMenu = new MainMenu(this); cout << "creat Game" << endl; }
+Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { /*mainMenu = new MainMenu();*/ cout << "creat Game" << endl; }
 Game::~Game() { 
 	cout << "Delete" << endl;
 	delete mainMenu; 
 }
 void Game::run() {
+	mainMenu = new MainMenu(); /* Из - за того что в классе mainMenu есть указатель на класс Game, то при попытке в конструкторе нельзя создавать объект MainMenu, 
+	так как происходит перекрестная инициализация Game самим Game и MainMenu и происходит зависание программы, как это обойти не придумал. Наиболее подхлдящий вариант был
+	перенести инициализацию в метод запуска цикла игры run()*/
 	while (currentState != EXIT)
 	{
 		switch (currentState)

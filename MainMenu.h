@@ -5,7 +5,7 @@
 #include <fstream>
 #include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
 #include <Windows.h>
-//#include "Game.h"
+#include "Game.h"
 
 using std::cout;
 using std::endl;
@@ -15,15 +15,15 @@ using std::fstream;
 using std::ifstream;
 using std::ofstream;
 
-class Game;
+//class Game;
 
 class MainMenu
 {
     enum MENU { EXIT = 0, NEWGAME, LOAD, SAVE, BACKTOGAME, ABOUTGAME};
     bool gameRunning{};
-    Game *game;
+    Game &game = Game::getInstance();
 public:
-    MainMenu(Game* gameInstance); // конструктор: текущая игровая сессия еще не запущена (только что запустили игру)
+    MainMenu(); // конструктор: текущая игровая сессия еще не запущена (только что запустили игру)
     //~MainMenu() {};
 	void displayMainMenu();
     void selectMainMenu();

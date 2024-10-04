@@ -1,7 +1,7 @@
 #include "MainMenu.h"
-#include "Game.h"
+//#include "Game.h"
 
-MainMenu::MainMenu(Game* gameInstance) : gameRunning{ false }, game{ gameInstance } {}
+MainMenu::MainMenu() : gameRunning{ false } {}
 
 void MainMenu::displayMainMenu() {
     cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << endl << endl;;
@@ -69,7 +69,7 @@ void MainMenu::newGame() {
     player.recalculateCharacteristic();
     // далее должен быть переход в класс деревня с выходом из Главного меню (надо подумать как реализовать)
     gameRunning = true; // подымаем флаг запуска игровой сессии
-    game->setState(Game::VILLAGE);
+    game.setState(Game::VILLAGE);
 }
 void MainMenu::loadGame() { // позже выбрать один вариант Загрузки и Сохранения
     const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
@@ -93,7 +93,7 @@ void MainMenu::loadGame() { // позже выбрать один вариант Загрузки и Сохранения
         cout << "Игра загружена из Текстового файла!" << endl;
     }
     gameRunning = true; // подымаем флаг запуска игровой сессии
-    game->setState(Game::VILLAGE);
+    game.setState(Game::VILLAGE);
 }
 void MainMenu::saveGame() { // позже выбрать один вариант Загрузки и Сохранения
     //ofstream myFile;
@@ -121,16 +121,16 @@ void MainMenu::saveGame() { // позже выбрать один вариант Загрузки и Сохранения
         myFileText.close();
         cout << "Игра сохраненена в Текстовый файл!" << endl;
     }
-    game->backState();
+    game.backState();
 }
 void MainMenu::backToGame() {
     // также подумать как вернуться в игровую ссесию, в данном случае возврат в класс Деревня и выход из гласного меню
-    game->backState();
+    game.backState();
 }
 void MainMenu::aboutGame() {
 
 }
 void MainMenu::exitGame() {
     cout << "\n\t\tСпасибо за игру! Будем вас ждать снова!\n\n";
-    game->setState(Game::EXIT);
+    game.setState(Game::EXIT);
 }

@@ -11,6 +11,7 @@
 #include <chrono> 
 #include <Windows.h>
 #include "Game.h"
+#include "MainMenu.h"
 
 
 using std::cout;
@@ -22,7 +23,7 @@ int main()
 {
     setlocale(LC_ALL, "ru");
     srand(time(NULL));
-
+    //MainMenu menu{};
     Game &newGame = Game::getInstance();
     newGame.run();
 

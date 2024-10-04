@@ -22,13 +22,13 @@ class Game // Класс реализован по паттерну Singleton, так как игровой цикл может
 public:
 	enum State { MAIN_MENU, VILLAGE, TAVERN, SHOP, DANJ, EXIT };
 private:
-	MainMenu* mainMenu; // Гдето-тут ошибка???
+	MainMenu* mainMenu;
 	State currentState; // Текущее состояние
 	State previousState; // Предыдущее состояние для возможности возврата
 	Game();
 	~Game();
 	Game(const Game&) = delete;
-	void operator=(const Game&) = delete;
+	Game& operator=(const Game&) = delete;
 	//static Game* instance;
 public:
 	static Game& getInstance() {
