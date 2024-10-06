@@ -6,6 +6,7 @@ void Hero::recalculateCharacteristic() { // Реализация идентична до рефакторинга
 	parrying = 0.1 * dexterity + 0.02 * wisdom;
 	initiative = 0.03 * intelligence + 0.02 * wisdom + 0.01 * charizma;
 	maxHealth = (10 * lvl) * (0.8 * power + 0.4 * endurance);
+	health = maxHealth;
 	scalExpUp = 100;
 	for (int i = 1; i < lvl; ++i)
 	{
@@ -131,4 +132,13 @@ void Hero::loadFromText(ifstream& inFile) {
 	inFile >> lvl >> power >> dexterity >> endurance >> intelligence >> wisdom >> charizma;
 	inFile >> minDamage >> maxDamage >> parrying >> initiative >> maxHealth >> health;
 	inFile >> freePoints >> scalExp >> scalExpUp >> winBattle >> openLvlDanj >> Money;
+}
+void Hero::rebootStartHero() {
+	rebootStartCharacteristic();
+	freePoints = 10;
+	scalExp = 0;
+	scalExpUp = 0;
+	winBattle = 0;
+	openLvlDanj = 0;
+	Money = 0;
 }

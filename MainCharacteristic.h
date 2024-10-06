@@ -28,6 +28,7 @@ protected:
 
 	MainCharacteristic() {} // Конструктор по умолчанию
 	MainCharacteristic(string name) : name{ name }, lvl{ 1 }, power{ 1 }, dexterity{ 1 }, endurance{ 1 }, intelligence{ 1 }, wisdom{ 1 }, charizma{ 1 } {} // конструктор для нследников
+	void rebootStartCharacteristic();
 public:
 	virtual ~MainCharacteristic() {}; // чисто вирутайльный деструктор
 	virtual void recalculateCharacteristic() = 0; // расчет и пересчет характеристик, каждый наследник сам реализует

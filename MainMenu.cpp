@@ -9,12 +9,13 @@ void MainMenu::displayMainMenu() {
     cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << endl << endl;
     cout << "\t\t\tNEWGAME - 1" << endl << endl;
     cout << "\t\t\tLOADING - 2" << endl << endl;
-    if (gameRunning == false)
+    if (gameRunning == true)
     {
         cout << "\t\t\tSAVING - 3" << endl << endl;
         cout << "\t\t\tBACK - 4" << endl << endl;
     }
-    cout << "\t\t\tABOUT GAME - 0" << endl << endl;
+    cout << "\t\t\tABOUT GAME - 5" << endl << endl;
+    cout << "\t\t\tEXIT GAME - 0" << endl << endl;
 }
 void MainMenu::selectMainMenu() {
     int index{};
@@ -51,6 +52,10 @@ void MainMenu::selectMainMenu() {
 }
 void MainMenu::newGame() {
     Hero& player = Hero::getInstance();
+    if (player.getLvl() != 1 && player.getFreepoints() != 10)
+    {
+        player.rebootStartHero();
+    }
     char Y_N{};
     do
     {

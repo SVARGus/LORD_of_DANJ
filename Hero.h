@@ -47,6 +47,7 @@ public:
 	int attack();
 	void takeDamage(int attack);
 	void distrPointHero();
+	void rebootStartHero(); // Обнуления статов игрока до стартовых статов.
 	// добавить метод сохранения и загрузки из файла данных героя? или в меню реализовать? // Добавил методы сохранения и загрузки в сам класс (текстовый и бинарный)
 	void saveToBinary(ofstream& outFile) const;
 	void loadFromBinary(ifstream& inFile);

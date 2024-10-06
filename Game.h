@@ -6,6 +6,7 @@
 //#include <fstream>
 //#include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
 //#include <Windows.h>
+//#include "Village.h"
 
 using std::cout;
 using std::endl;
@@ -16,13 +17,15 @@ using std::string;
 //using std::ofstream;
 
 class MainMenu;
+class Village;
 
 class Game // Класс реализован по паттерну Singleton, так как игровой цикл может быть только один
 {
 public:
 	enum State { MAIN_MENU, VILLAGE, TAVERN, SHOP, DANJ, EXIT };
 private:
-	MainMenu* mainMenu;
+	MainMenu* mainMenu{ nullptr };
+	Village* village{ nullptr };
 	State currentState; // Текущее состояние
 	State previousState; // Предыдущее состояние для возможности возврата
 	Game();
