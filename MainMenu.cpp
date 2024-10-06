@@ -79,7 +79,7 @@ void MainMenu::newGame() {
 void MainMenu::loadGame() { // позже выбрать один вариант Загрузки и Сохранения
     const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
     const string textDirect{ "Save_LORD_of_DANJ\\Savegame.txt" };
-
+    // Оба варианта загрузки работают
     ifstream myFileBinary(binaryDirect, std::ios::binary);
     if (myFileBinary.is_open())
     {
@@ -89,14 +89,14 @@ void MainMenu::loadGame() { // позже выбрать один вариант Загрузки и Сохранения
         cout << "Игра загружена из Бинарного файла!" << endl;
     }
 
-    ifstream myFileText(textDirect);
+   /* ifstream myFileText(textDirect);
     if (myFileText.is_open())
     {
         Hero& player = Hero::getInstance();
         player.loadFromText(myFileText);
         myFileText.close();
         cout << "Игра загружена из Текстового файла!" << endl;
-    }
+    }*/
     gameRunning = true; // подымаем флаг запуска игровой сессии
     game.setState(Game::VILLAGE);
 }
@@ -108,7 +108,7 @@ void MainMenu::saveGame() { // позже выбрать один вариант Загрузки и Сохранения
 
     const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
     const string textDirect{ "Save_LORD_of_DANJ\\Savegame.txt" };
-
+    // Оба варианта сохранения работают
     ofstream myFileBinary(binaryDirect, std::ios::binary | std::ios::trunc);
     if (myFileBinary.is_open())
     {

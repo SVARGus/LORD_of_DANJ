@@ -7,6 +7,7 @@ using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
+
 class Village
 {
 	enum Menu { SHOP = 1, TAVERN, DANJ, HERO, MAIN_MENU};
@@ -20,7 +21,7 @@ public:
 	Village() {}
 	~Village() {}
 	string getNameVillage() { return nameVillage; }
-	void displayMenuVillage();
+	void displayMenuVillage() const;
 	void menuVillage();
 };
 

@@ -25,6 +25,11 @@ int Hero::attack() {
 	return (Damage + Damage * initiative);
 }
 void Hero::takeDamage(int attack) {
+	if (rand() % 30 / 10 <= parrying / lvl)
+	{
+		cout << "Герою удалось уклониться от удара!" << endl;
+		return;
+	}		
 	health -= attack;
 }
 void Hero::distrPointHero() {
@@ -72,7 +77,7 @@ void Hero::distrPointHero() {
 }
 
 void Hero::saveToBinary(ofstream& outFile) const {
-	outFile.write((char*)&name, sizeof(name)); // проверить корректность работы со string
+	outFile.write((char*)&name, sizeof(name)); // проверить корректность работы со string (с одним словом работает, позже проверить с составным именем из 2 и более слов)
 	outFile.write((char*)&lvl, sizeof(lvl));
 	outFile.write((char*)&power, sizeof(power));
 	outFile.write((char*)&dexterity, sizeof(dexterity));
@@ -95,7 +100,7 @@ void Hero::saveToBinary(ofstream& outFile) const {
 	outFile.write((char*)&Money, sizeof(Money));
 }
 void Hero::loadFromBinary(ifstream& inFile) {
-	inFile.read((char*)&name, sizeof(name)); // проверить корректность работы со string
+	inFile.read((char*)&name, sizeof(name)); // проверить корректность работы со string (с одним словом работает, позже проверить с составным именем из 2 и более слов)
 	inFile.read((char*)&lvl, sizeof(lvl));
 	inFile.read((char*)&power, sizeof(power));
 	inFile.read((char*)&dexterity, sizeof(dexterity));

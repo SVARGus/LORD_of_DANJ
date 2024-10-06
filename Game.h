@@ -18,6 +18,7 @@ using std::string;
 
 class MainMenu;
 class Village;
+class Danj;
 
 class Game // Класс реализован по паттерну Singleton, так как игровой цикл может быть только один
 {
@@ -26,6 +27,7 @@ public:
 private:
 	MainMenu* mainMenu{ nullptr };
 	Village* village{ nullptr };
+	Danj* danj{ nullptr };
 	State currentState; // Текущее состояние
 	State previousState; // Предыдущее состояние для возможности возврата
 	Game();

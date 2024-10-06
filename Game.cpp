@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "MainMenu.h"
 #include "Village.h"
+#include "Danj.h"
 
 Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { /*mainMenu = new MainMenu();*/ cout << "creat Game" << endl; }
 Game::~Game() { 
@@ -12,6 +13,7 @@ void Game::run() {
 	так как происходит перекрестна€ инициализаци€ Game самим Game и MainMenu и происходит зависание программы, как это обойти не придумал. Ќаиболее подхлд€щий вариант был
 	перенести инициализацию в метод запуска цикла игры run()*/
 	village = new Village();
+	danj = new Danj();
 	while (currentState != EXIT)
 	{
 		switch (currentState)

@@ -1,6 +1,6 @@
 #include "Village.h"
 
-void Village::displayMenuVillage() {
+void Village::displayMenuVillage() const {
 	cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << endl << endl;;
 	cout << "\t\t\tМеню деревни " << nameVillage << endl << endl;
 	cout << "<<<<<<<<<<----------|||||||~~~~~|||||||---------->>>>>>>>>>" << endl << endl;
