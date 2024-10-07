@@ -31,6 +31,8 @@ void Game::run() {
 		case SHOP:
 			break;
 		case DANJ:
+			danj->displayMenuDanj();
+			danj->menuDanj();
 			break;
 		case EXIT:
 			break;
