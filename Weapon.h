@@ -8,7 +8,7 @@ using std::cin;
 using std::string;
 // Класс интерфейс Оружия. Также тут будут прописаны конкретные виды Оружия (Меч, Дубина, копье). Виды оружия позже расширятся
 // Бует задействован паттерн Абстрактная фабрика
-class Weapon : protected Items
+class Weapon : public Items
 {
 protected:
 	string name{};
@@ -21,9 +21,28 @@ public:
 	string getName(){ return name; };
 	int getDamage(){ return damage; };
 };
-// Конкретные классы Оружия
-class Sword : protected Weapon 
-{
 
+//Абстрактная фабрика Weapon
+class WeaponFactory
+{
+public:
+	virtual Weapon* creatWeapon() = 0;
+};
+
+// Конкретные классы Оружия, а также фабрика
+// МЕЧ
+class Sword : public Weapon
+{
+public:
+	Sword(){}
+	void use() const override {}
+	int attack() const override {}
+};
+class SwordFactory : public WeaponFactory
+{
+public:
+	Weapon* creatWeapon() override {
+		return new Sword();
+	}
 };
 
