@@ -31,7 +31,7 @@ protected:
 public:
 	virtual ~Weapon() {};
 	virtual int attack() const = 0;
-	void displayNameItems() {
+	void displayNameItems() const {
 		switch (qualityWeapon)
 		{
 		case Weapon::RUST:
@@ -114,7 +114,7 @@ class Sword : public Weapon
 	vector <double> modifierQuality { 0.8, 1.0, 1.2, 1.5 }; // Модификатор качества оружия влияющего на урон QualityWeapon // Для каждого типа оружия он может меняться
 public:
 	Sword() {}
-	void displayItems() {
+	void displayItems() const{
 		cout << "Оружие: "; displayNameItems(); cout << endl;
 		cout << "ID (инвентарный номер): " << idItems << endl; //Временный вывод для проверки
 		cout << "Урон: \n";
