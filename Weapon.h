@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
 #include "Items.h"
+#include <vector>
 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
+using std::vector;
+
 // Класс интерфейс Оружия. Также тут будут прописаны конкретные виды Оружия (Меч, Дубина, копье). Виды оружия позже расширятся
 // Бует задействован паттерн Абстрактная фабрика
 class Weapon : protected Items
@@ -15,9 +18,9 @@ public:
 	enum QualityWeapon {RUST, NORMAL, QUALITY, SHARPENED}; // Качество оружия: Ржавое (гнилое), Обычное, Качественное, Заточенное
 	enum TypeDamageWeapon {CUTTING, STABBING, CRUSHING}; // Тип урона: Режущий, Колющий, Дробящий
 protected:
-	TypeWeapon typeWeapon{}; // Для
-	QualityWeapon qualityWeapon{};
-	TypeDamageWeapon typeDamegeWeapon{};
+	TypeWeapon typeWeapon{}; // Определенный тип оружия
+	QualityWeapon qualityWeapon{}; // Определенное качество оружия
+	TypeDamageWeapon typeDamegeWeapon{}; // Тип урона, игрок сможет выбирать
 	int damage{}; // стандарнтый уровень урона будет расчитываться от QualityWeapon и TypeDamageWeapon
 	int money{}; // Позже будет заменен на отдельный класс с ценами продажи и покупки
 	string description{}; // Описание оружия
@@ -28,7 +31,67 @@ protected:
 public:
 	virtual ~Weapon() {};
 	virtual int attack() const = 0;
-
+	void displayNameItems() {
+		switch (qualityWeapon)
+		{
+		case Weapon::RUST:
+			if (typeWeapon == SWORD)
+				cout << "Ржавый меч ";
+			else if (typeWeapon == SPEAR)
+				cout << "Ржавое копье ";
+			else if (typeWeapon == CLIB)
+				cout << "Гнилая дубина ";
+			break;
+		case Weapon::NORMAL:
+			if (typeWeapon == SWORD)
+				cout << "Обычный меч ";
+			else if (typeWeapon == SPEAR)
+				cout << "Обычное копье ";
+			else if (typeWeapon == CLIB)
+				cout << "Обычная дубина ";
+			break;
+		case Weapon::QUALITY:
+			if (typeWeapon == SWORD)
+				cout << "Качественный меч ";
+			else if (typeWeapon == SPEAR)
+				cout << "Качественное копье ";
+			else if (typeWeapon == CLIB)
+				cout << "Качественная дубина ";
+			break;
+		case Weapon::SHARPENED:
+			if (typeWeapon == SWORD)
+				cout << "Заточенный меч ";
+			else if (typeWeapon == SPEAR)
+				cout << "Заточенное копье ";
+			else if (typeWeapon == CLIB)
+				cout << "Укрепленная дубина ";
+			break;
+		default:
+			cout << "Error!!!" << endl;
+		}
+		cout << "\"" << name << "\"";
+	}
+	void selectTypeDamageWeapon() // Выбор способа нанесения урона
+	{
+		cout << "Выберите способ нанесения урона: \n0)Режущий\n1)Колющий\n2)Дробящий\n";
+		int choice{};
+		cin >> choice;
+		switch (choice)
+		{
+		case Weapon::CUTTING:
+			typeDamegeWeapon = CUTTING;
+			break;
+		case Weapon::STABBING:
+			typeDamegeWeapon = STABBING;
+			break;
+		case Weapon::CRUSHING:
+			typeDamegeWeapon = CRUSHING;
+			break;
+		default:
+			cout << "Error!!!" << endl;
+			break;
+		}
+	}
 	string getName(){ return name; };
 	int getDamage(){ return damage; };
 	//virtual int calculateAttackDamage() = 0; // Калькулятор урона
@@ -47,20 +110,24 @@ public:
 // МЕЧ
 class Sword : public Weapon
 {
+	vector <double> modifierTypeDamage { 1.0, 0.8, 0.5 }; // Модификаторы типа урона TypeDamageWeapon // Для каждого типа оружия он свой
+	vector <double> modifierQuality { 0.8, 1.0, 1.2, 1.5 }; // Модификатор качества оружия влияющего на урон QualityWeapon // Для каждого типа оружия он может меняться
 public:
 	Sword() {}
+	void displayItems() {
+		cout << "Оружие: "; displayNameItems(); cout << endl;
+		cout << "ID (инвентарный номер): " << idItems << endl; //Временный вывод для проверки
+		cout << "Урон: \n";
+		cout << "\tРежущий: " << (damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(CUTTING)) << endl;
+		cout << "\tКолющий: " << (damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(STABBING)) << endl;
+		cout << "\tДробящий: " << (damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(CRUSHING)) << endl;
+		cout << "Описание оружия: " << description << endl;
+	}
+
 	void use() const override {}
-	int attack() const override {
-		double finishDamage{};
-		// реализовать расчеты через switch!!
-		/*if (typeDamegeWeapon == CUTTING)
-			return damage;
-		else if (typeDamegeWeapon == STABBING)
-			return damage * 0.8;
-		else if (typeDamegeWeapon == CRUSHING)
-			return damage * 0.5;
-		else
-			return 0;*/
+	int attack() const override // расчет урона в зависимости от Качества оружия и типа урона
+	{
+		return damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(typeDamegeWeapon);
 	}
 };
 class SwordFactory : public WeaponFactory
