@@ -95,7 +95,7 @@ public:
 	string getName(){ return name; };
 	int getDamage(){ return damage; };
 	//virtual int calculateAttackDamage() = 0; // Калькулятор урона
-	void setTypeDamageWeapon(TypeDamageWeapon newTypeDamageWeapon) { typeDamegeWeapon = newTypeDamageWeapon; } // Оставим открытым, чтоб во время боя выирать тип удара
+	void setTypeDamageWeapon(TypeDamageWeapon newTypeDamageWeapon) { typeDamegeWeapon = newTypeDamageWeapon; } // Оставим открытым, чтоб во время боя выбирать тип удара
 
 };
 
@@ -123,8 +123,6 @@ public:
 		cout << "\tДробящий: " << (damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(CRUSHING)) << endl;
 		cout << "Описание оружия: " << description << endl;
 	}
-
-	void use() const override {}
 	int attack() const override // расчет урона в зависимости от Качества оружия и типа урона
 	{
 		return damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(typeDamegeWeapon);

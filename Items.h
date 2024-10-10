@@ -16,6 +16,5 @@ protected:
 public:
 	virtual ~Items(){}
 	virtual void displayItems() const = 0;
-	virtual void use() const = 0;
 };
 
