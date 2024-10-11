@@ -2,12 +2,15 @@
 #include <iostream>
 #include "Items.h"
 #include <vector>
+#include <fstream>
 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
 using std::vector;
+using std::ifstream;
+using std::ofstream;
 
 // Класс интерфейс Оружия. Также тут будут прописаны конкретные виды Оружия (Меч, Дубина, копье). Виды оружия позже расширятся
 // Бует задействован паттерн Абстрактная фабрика
@@ -95,7 +98,10 @@ public:
 	int getDamage(){ return damage; };
 	//virtual int calculateAttackDamage() = 0; // Калькулятор урона
 	void setTypeDamageWeapon(TypeDamageWeapon newTypeDamageWeapon) { typeDamegeWeapon = newTypeDamageWeapon; } // Оставим открытым, чтоб во время боя выбирать тип удара
-
+	void saveItemsToBinary(ofstream& outFile) const; // Метод сохранения Weapon в Бинарный файл
+	void loadItemsFromBinary(ifstream& inFile); // Метод сохранения Weapon в Текстовый файл
+	void saveItemsToText(ofstream& outFile) const; // Метод загрузки Weapon из Бинарного файла
+	void loadItemsFromText(ifstream& inFile); // Метод загрузки Weapon из Текстового файла
 };
 
 //Абстрактная фабрика Weapon
@@ -109,7 +115,7 @@ public:
 // МЕЧ
 class Sword : public Weapon
 {
-	vector <double> modifierTypeDamage { 1.0, 0.8, 0.5 }; // Модификаторы типа урона TypeDamageWeapon // Для каждого типа оружия он свой
+	vector <double> modifierTypeDamage { 1.0, 0.8, 0.5 }; // Модификаторы типа урона TypeDamageWeapon // Для каждого типа оружия он свой // в будущем будет также уникален для каждого оружия
 	vector <double> modifierQuality { 0.8, 1.0, 1.2, 1.5 }; // Модификатор качества оружия влияющего на урон QualityWeapon // Для каждого типа оружия он может меняться
 public:
 	Sword() {}
