@@ -16,5 +16,7 @@ protected:
 public:
 	virtual ~Items(){}
 	virtual void displayItems() const = 0;
+	string getName() { return name; };
+
 };
 

@@ -3,11 +3,17 @@
 // Методы для первичной реализации
 void Inventory::addItem(Items* item) // Метод добавления предмета в инвентарь (например при выполнеия задания награда забирается в рюкзан) // После добавления размера инветоря нужно будет добавить методы на проверку переполнения инвентаря
 {
-
+	inventoryItems.push_back(item);
+	cout << "Предмет " << item->getName() << " помещен в " << nameInventory << "." << endl;
 }
 void Inventory::removItem(int index) // Метод удаления (выбрасывания) предмета из рюкзака по индексу
 {
-
+	if (index >= 0 && index < inventoryItems.size())
+	{
+		cout << "Предмет " << inventoryItems[index]->getName() << " удален из " << nameInventory << "." << endl;
+		delete inventoryItems[index];
+		inventoryItems.erase(inventoryItems.begin() + index);
+	}
 }
 void Inventory::transferItem(Inventory& other, int index) // Метод трансфера между инветорями (например между игроком и магазином). index (индекс) предмеа текущего инвентаря добавить в other (другой) инветарь
 {
@@ -15,11 +21,12 @@ void Inventory::transferItem(Inventory& other, int index) // Метод трансфера меж
 }
 void Inventory::displayInventory() const // Полный вывод инветоря с минимальными данными
 {
-
+	cout << "Содержимое " << nameInventory << ":" << endl;
+	// Надо реализовать краткий вывод информации о предмете в Items и его детях
 }
 void Inventory::displayInventory(int index) const // Вывод конкретного предмета из инвентаря со всеми характеристиками 
 {
-
+	
 }
 Items* Inventory::getItem(int index) // Получение предмета по индексу
 {

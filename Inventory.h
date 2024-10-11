@@ -18,8 +18,13 @@ using std::ofstream;
 class Inventory
 {
 	vector<Items*> inventoryItems;
+	string nameInventory{}; // Добавляет инветарю название
 	//int sizeInventory{}; // в будущем можно будет ограничивать инветарь и ввести рюкзаки разной вместитеьностью и прочими характеристиками.
 public:
+	Inventory(string name) : nameInventory{ name } {}
+	//
+	string getNameInventory() { return nameInventory; }
+	void setNameInventory(string name) { nameInventory = name; }
 	// Методы для первичной реализации
 	void addItem(Items* item); // Метод добавления предмета в инвентарь (например при выполнеия задания награда забирается в рюкзан) // После добавления размера инветоря нужно будет добавить методы на проверку переполнения инвентаря
 	void removItem(int index); // Метод удаления (выбрасывания) предмета из рюкзака по индексу

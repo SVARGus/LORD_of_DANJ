@@ -63,6 +63,7 @@ void MainMenu::newGame() {
         cout << "Введите ваш Ник: ";
         cin >> name;
         player.setName(name);
+
         cout << "Ваш ник: " << player.getName() << endl;
         cout << "Подтверждаете выбор? ДА(Y) - НЕТ(N) ";
         cin >> Y_N;

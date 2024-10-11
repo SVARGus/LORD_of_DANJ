@@ -92,7 +92,6 @@ public:
 			break;
 		}
 	}
-	string getName(){ return name; };
 	int getDamage(){ return damage; };
 	//virtual int calculateAttackDamage() = 0; // Калькулятор урона
 	void setTypeDamageWeapon(TypeDamageWeapon newTypeDamageWeapon) { typeDamegeWeapon = newTypeDamageWeapon; } // Оставим открытым, чтоб во время боя выбирать тип удара

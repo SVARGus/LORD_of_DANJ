@@ -3,6 +3,8 @@
 #include "MainCharacteristic.h"
 #include <fstream>
 #include <string>
+#include "Inventory.h"
+#include "Weapon.h"
 
 using std::cout;
 using std::endl;
@@ -28,6 +30,9 @@ class Hero : public MainCharacteristic
 	Hero(const Hero&) = delete; // Удален конструктор копирования согласно принципу паттерна Singleton
 	Hero& operator= (const Hero&) = delete; // Удален оператор присвоения согласно принципу паттерна Singleton
 	//Hero() {} // нужен ли?
+	Inventory inventory{"Рюкзак героя"}; // Инвентарь героя
+	Weapon* equippedFirstWeapon{ nullptr }; // Экипированное оружие в одной руке
+	Weapon* equippedSecondWeapon{ nullptr };// Экипированное оружие во второй руке
 public:
 	//friend class MainMenu;
 	// friend class MainMenu Объявляется как дружественный класс для возможности загрузки и сохранения героя в классе MainMenu без нарушения принципа инкапсуляции
@@ -44,7 +49,6 @@ public:
 	// Методы класса (будут дополняться по необходимости)
 	void recalculateCharacteristic();
 	void displayCharacteristic() const;
-	int attack();
 	void takeDamage(int attack);
 	void distrPointHero();
 	void rebootStartHero(); // Обнуления статов игрока до стартовых статов.
@@ -59,5 +63,17 @@ public:
 	int getScalExpUp() const { return scalExpUp; }
 	int getWinBattle() const { return winBattle; }
 	int getOpenLvlDanj() const { return openLvlDanj; }
+
+	// Методы для взаимодествия с инвентарем и предметами Items, а также те методы которые надо переделать
+	int attack(); // Переделать под возможность использования оружия
+
+	void displayInventory(); // Полный вывод предметов в инвенторе с урезанной информацией
+	void displayInventory(int index); // вывод на экран определенного предмета со всей информацией
+	void equipFirstWeapon(int index); // Экипировка оружия из инвентаря в первую руку
+	void equipSecondWeapon(int index); // Экипировка оружия из инвентаря во вторую руку
+	void unEquipFirstWeapon(int index); // Снять оружие 
+	void unEquipSecondWeapon(int index); // Снять оружие
+	void addItemToInventory(Items* item); // Метод добавления предмета в инвентарь
+	void transferItemTo(Inventory& other, int index); // Метод передачи предмета из своего инвентаря в другой инвентарь (сундук, магазин)
 };
 
