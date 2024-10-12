@@ -1,10 +1,13 @@
 #pragma once
 #include <iostream>
+#include <fstream>
 
 using std::cout;
 using std::endl;
 using std::cin;
 using std::string;
+using std::ifstream;
+using std::ofstream;
 
 // Класс интерфейс для подклассов Weapon, Equipment, OtherItems
 class Items
@@ -29,5 +32,17 @@ public:
 	virtual void loadItemsFromBinary(ifstream& inFile) = 0; // Метод сохранения Weapon в Текстовый файл
 	virtual void saveItemsToText(ofstream& outFile) const = 0; // Метод загрузки Weapon из Бинарного файла
 	virtual void loadItemsFromText(ifstream& inFile) = 0; // Метод загрузки Weapon из Текстового файла
+};
+
+class ItemFactory
+{
+public:
+	virtual Items* createItem(const string& identifier) = 0;
+	virtual ~ItemFactory() {}
+};
+class ConcreteItemFactory : public ItemFactory
+{
+public:
+	Items* createItem(const string& identifier) override;
 };
 

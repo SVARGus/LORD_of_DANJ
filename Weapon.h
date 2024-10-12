@@ -3,6 +3,7 @@
 #include "Items.h"
 #include <vector>
 #include <fstream>
+#include <string>
 
 using std::cout;
 using std::endl;
@@ -14,7 +15,7 @@ using std::ofstream;
 
 // Класс интерфейс Оружия. Также тут будут прописаны конкретные виды Оружия (Меч, Дубина, копье). Виды оружия позже расширятся
 // Бует задействован паттерн Абстрактная фабрика
-class Weapon : protected Items
+class Weapon : public Items
 {
 public:
 	enum TypeWeapon {SWORD, SPEAR, CLIB}; // Типы оружия: Мечь, Копье, Дубина
@@ -98,28 +99,17 @@ public:
 	int getDamage(){ return damage; };
 	//virtual int calculateAttackDamage() = 0; // Калькулятор урона
 	void setTypeDamageWeapon(TypeDamageWeapon newTypeDamageWeapon) { typeDamegeWeapon = newTypeDamageWeapon; } // Оставим открытым, чтоб во время боя выбирать тип удара
-	void saveItemsToBinary(ofstream& outFile) const; // Метод сохранения Weapon в Бинарный файл
-	void loadItemsFromBinary(ifstream& inFile); // Метод сохранения Weapon в Текстовый файл
-	void saveItemsToText(ofstream& outFile) const; // Метод загрузки Weapon из Бинарного файла
-	void loadItemsFromText(ifstream& inFile); // Метод загрузки Weapon из Текстового файла
 };
 
-//Абстрактная фабрика Weapon
-class WeaponFactory
-{
-public:
-	virtual Weapon* creatWeapon() = 0;
-};
-
-// Конкретные классы Оружия, а также фабрика
-// МЕЧ
+// Конкретные классы Оружия, Обстрактная фабрика перенесена в класс Items
+// МЕЧ // wep01
 class Sword : public Weapon
 {
 	vector <double> modifierTypeDamage { 1.0, 0.8, 0.5 }; // Модификаторы типа урона TypeDamageWeapon // Для каждого типа оружия он свой // в будущем будет также уникален для каждого оружия
 	vector <double> modifierQuality { 0.8, 1.0, 1.2, 1.5 }; // Модификатор качества оружия влияющего на урон QualityWeapon // Для каждого типа оружия он может меняться
 public:
 	Sword() {}
-	void displayItems() const{
+	void displayItems() const override {
 		cout << "Оружие: "; displayNameItems(); cout << endl;
 		cout << "ID (инвентарный номер): " << idItems << endl; //Временный вывод для проверки
 		cout << "Урон: \n";
@@ -132,12 +122,24 @@ public:
 	{
 		return damage * modifierQuality.at(qualityWeapon) * modifierTypeDamage.at(typeDamegeWeapon);
 	}
+	// Ниже описанные методы будут вызываться через конкретную фабрику реализованную в классе Items, что позволить корректно загружать определенные типы объектов
+	void saveItemsToBinary(ofstream& outFile) const override; // Метод сохранения предмета в Бинарный файл
+	void loadItemsFromBinary(ifstream& inFile) override; // Метод сохранения предмета в Текстовый файл
+	void saveItemsToText(ofstream& outFile) const override; // Метод загрузки предмета из Бинарного файла
+	void loadItemsFromText(ifstream& inFile) override; // Метод загрузки предмета из Текстового файла
 };
-class SwordFactory : public WeaponFactory
+// КОПЬЕ // wep02
+class Spear : public Weapon // Класс пока задекларирован
 {
+	vector <double> modifierTypeDamage{ 1.0, 0.8, 0.5 }; // Модификаторы типа урона TypeDamageWeapon // Для каждого типа оружия он свой // в будущем будет также уникален для каждого оружия
+	vector <double> modifierQuality{ 0.8, 1.0, 1.2, 1.5 }; // Модификатор качества оружия влияющего на урон QualityWeapon // Для каждого типа оружия он может меняться
 public:
-	Weapon* creatWeapon() override {
-		return new Sword();
-	}
+	Spear() {}
+	void displayItems() const override;
+	int attack() const override;
+	void saveItemsToBinary(ofstream& outFile) const override; // Метод сохранения предмета в Бинарный файл
+	void loadItemsFromBinary(ifstream& inFile) override; // Метод сохранения предмета в Текстовый файл
+	void saveItemsToText(ofstream& outFile) const override; // Метод загрузки предмета из Бинарного файла
+	void loadItemsFromText(ifstream& inFile) override; // Метод загрузки предмета из Текстового файла
 };
 

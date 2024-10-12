@@ -78,10 +78,12 @@ void Inventory::sortInventoryBy(const string& criterion) // Метод сортировки по 
 Items* Inventory::findItemByName(const string& name) // Метод поиска по имени // Можно реализовать также по различным критериям при необходимости
 {
 	cout << "Метод findItemByName пока не реализован " << endl;
+	return nullptr;
 }
 int Inventory::countItemsById(const string& idIndex) // Подсчет количество одинаковых предметов // Можно реализовать также по различным критериям при необходимости, напримет по имени и типам
 {
 	cout << "Метод countItemsById пока не реализован " << endl;
+	return 0;
 }
 void Inventory::clearInventory() // Метод полной очистки инветаря
 {
@@ -92,6 +94,7 @@ void Inventory::clearInventory() // Метод полной очистки инветаря
 double Inventory::calculatedTotalWeight() const // Подсчет общего веса инвентаря (в рюкзаке могут быть ограничения по весу или перегруз влияет на подвижность героя)
 {
 	cout << "Метод calculatedTotalWeight пока не реализован " << endl;
+	return 0;
 }
 double Inventory::calculatedTotalValue() const // Оценка стоимости всех предметов инвентаре
 {
