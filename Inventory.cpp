@@ -60,11 +60,34 @@ void Inventory::loadInventoryFromBinary(ifstream& inFile) // Метод сохранения ин
 }
 void Inventory::saveInventoryToText(ofstream& outFile) const // Метод загрузки инвенторя из Бинарного файла
 {
+	outFile << nameInventory << "\n";
+	outFile << inventoryItems.size() << "\n";
+	for (int i = 0; i < inventoryItems.size(); i++)
+		inventoryItems[i]->saveItemsToText(outFile);
 	// реализовать для каждого наследника Items свой метод загрузки для возможности в дальнейшем масштабирования, чистоты кода и для инкапсуляции логики
 }
-void Inventory::loadInventoryFromText(ifstream& inFile) // Метод загрузки инвенторя из Текстового файла
+void Inventory::loadInventoryFromText(ifstream& inFile) // Метод загрузки инвенторя из Текстового файла // реализовать для каждого наследника Items свой метод загрузки для возможности в дальнейшем масштабирования, чистоты кода и для инкапсуляции логики
 {
-	// реализовать для каждого наследника Items свой метод загрузки для возможности в дальнейшем масштабирования, чистоты кода и для инкапсуляции логики
+	std::getline(inFile, nameInventory);
+	int size{};
+	inFile >> size;
+	inFile.ignore();
+	string identifier;
+	for (int i = 0; i < size; i++)
+	{
+		std::getline(inFile, identifier);
+		Items* item = factory->createItem(identifier);
+		if (item)
+		{
+			item->loadItemsFromText(inFile);
+			inventoryItems.push_back(item);
+		}
+		else
+		{
+			std::cerr << "!!!ERROR!!!   Неизвестный идентификатор предмета" << identifier << endl; // Надо методе Загрузки реализовать поимку исключений и ее обработку если будет не корректно считывать или файл поврежден
+			continue;
+		}
+	}
 }
 void Inventory::replaceItem(int index, Items* newItem) // метод замены предмета по индексу на новый
 {
@@ -99,14 +122,17 @@ double Inventory::calculatedTotalWeight() const // Подсчет общего веса инвентаря
 double Inventory::calculatedTotalValue() const // Оценка стоимости всех предметов инвентаре
 {
 	cout << "Метод calculatedTotalValue пока не реализован " << endl;
+	return 0;
 }
 bool Inventory::hasItem(const string& name) const // Проверка наличия предмета по имения (например есть ли квестовый предмет в инвентаре для выполнения задания)
 {
 	cout << "Метод hasItem пока не реализован " << endl;
+	return 0;
 }
 bool Inventory::isFullInventory() const // Проверка на заполненность инвенторя
 {
 	cout << "Метод isFullInventory пока не реализован " << endl;
+	return 0;
 }
 void Inventory::stackIdenticalItems() // Метод объединения одинаковых предметов в стак (Weapon и Equipment не будет использовать данный метод)
 {

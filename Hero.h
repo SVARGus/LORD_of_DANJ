@@ -23,7 +23,6 @@ class Hero : public MainCharacteristic
 	int winBattle{};
 	int openLvlDanj{};
 	//# InventoryWeapon : array<Weapon, 2> // добавить после реализации классов с оружием
-	//# inventory : Inventory / добавить после реализации класса Инвентарь и предметов (Items) и соответственно оружия и амуниции
 	int Money{}; // позже вывести в отдельный класс для возможности взаимодействия с Магазином,Таверной, выпадение с монстров и других возможностей в будущем
 
 	Hero(string name) : MainCharacteristic(name), freePoints{ 10 } {}; // Приватный конструктор для невозможности создать объект извне.
@@ -32,7 +31,7 @@ class Hero : public MainCharacteristic
 	//Hero() {} // нужен ли?
 	Inventory inventory{"Рюкзак героя"}; // Инвентарь героя
 	Weapon* equippedFirstWeapon{ nullptr }; // Экипированное оружие в одной руке
-	Weapon* equippedSecondWeapon{ nullptr };// Экипированное оружие во второй руке
+	//Weapon* equippedSecondWeapon{ nullptr };// Экипированное оружие во второй руке
 public:
 	//friend class MainMenu;
 	// friend class MainMenu Объявляется как дружественный класс для возможности загрузки и сохранения героя в классе MainMenu без нарушения принципа инкапсуляции

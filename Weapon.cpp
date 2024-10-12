@@ -50,3 +50,29 @@ void Sword::loadItemsFromText(ifstream& inFile) // Метод загрузки Weapon из Текс
 	}
 	description = line.substr();
 }
+// Методы КОПЬЯ
+void Spear::displayItems() const
+{
+	cout << "Временная заглушка для методов класса Spear" << endl;
+}
+int Spear::attack() const
+{
+	cout << "Временная заглушка для методов класса Spear" << endl;
+	return 0;
+}
+void Spear::saveItemsToBinary(ofstream& outFile) const // Метод сохранения предмета в Бинарный файл
+{
+	cout << "Временная заглушка для методов класса Spear" << endl;
+}
+void Spear::loadItemsFromBinary(ifstream& inFile)  // Метод сохранения предмета в Текстовый файл
+{
+	cout << "Временная заглушка для методов класса Spear" << endl;
+}
+void Spear::saveItemsToText(ofstream& outFile) const // Метод загрузки предмета из Бинарного файла
+{
+	cout << "Временная заглушка для методов класса Spear" << endl;
+}
+void Spear::loadItemsFromText(ifstream& inFile)  // Метод загрузки предмета из Текстового файла
+{
+	cout << "Временная заглушка для методов класса Spear" << endl;
+}

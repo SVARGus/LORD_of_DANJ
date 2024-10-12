@@ -128,6 +128,7 @@ void Hero::saveToText(ofstream& outFile) const {
 	outFile << lvl << ' ' << power << ' ' << dexterity << ' ' << endurance << ' ' << intelligence << ' ' << wisdom << ' ' << charizma << '\n';
 	outFile << minDamage << ' ' << maxDamage << ' ' << parrying << ' ' << initiative << ' ' << maxHealth << ' ' << health << '\n';
 	outFile << freePoints << ' ' << scalExp << ' ' << scalExpUp << ' ' << winBattle << ' ' << openLvlDanj << ' ' << Money << '\n';
+	inventory.saveInventoryToText(outFile);
 }
 void Hero::loadFromText(ifstream& inFile) {
 	string line{};
@@ -137,6 +138,7 @@ void Hero::loadFromText(ifstream& inFile) {
 	inFile >> lvl >> power >> dexterity >> endurance >> intelligence >> wisdom >> charizma;
 	inFile >> minDamage >> maxDamage >> parrying >> initiative >> maxHealth >> health;
 	inFile >> freePoints >> scalExp >> scalExpUp >> winBattle >> openLvlDanj >> Money;
+	inventory.loadInventoryFromText(inFile);
 }
 void Hero::rebootStartHero() {
 	rebootStartCharacteristic();
