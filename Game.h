@@ -30,6 +30,7 @@ class Game // Класс реализован по паттерну Singleton, так как игровой цикл может
 public:
 	enum State { MAIN_MENU, VILLAGE, TAVERN, SHOP, DANJ, EXIT };
 	vector<Weapon*> baseWeapon;  // База данных оружия
+	vector<Monster*> baseMonster; // База монстров
 	//vector<Equipment*> baseEquipment;  // База данных амуниции
 	//vector<Items*> baseOtherItems;  // База данных прочих предметов
 private:
@@ -47,6 +48,7 @@ private:
 	void loadBaseWeapons();  // Загрузка базы оружия
 	//void loadBaseEquipment();  // Загрузка базы амуниции
 	//void loadBaseOtherItems();  // Загрузка прочих предметов
+	void loadBaseMonster(); // Загрузка базы монстров
 public:
 	static Game& getInstance() {
 		static Game instance;

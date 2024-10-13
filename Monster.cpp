@@ -1,18 +1,17 @@
 #include "Monster.h"
 
-void Monster::recalculateCharacteristic(int lvlDanj) {
-	--lvlDanj; // дл€ первого уровн€ не будет пересчет основных статов
-	power = power + ((rand() % 2 + 1) * lvlDanj);
-	dexterity = dexterity + ((rand() % 2 + 1) * lvlDanj);
-	endurance = endurance + ((rand() % 2 + 1) * lvlDanj);
-	intelligence = intelligence + ((rand() % 2 + 1) * lvlDanj);
-	wisdom = wisdom + ((rand() % 2 + 1) * lvlDanj);
-	charizma = charizma + ((rand() % 2 + 1) * lvlDanj);
+void Monster::recalculateCharacteristic(/*int lvlDanj*/) {
+	power = power + ((rand() % 2 + 1) * (lvlDanj-1));
+	dexterity = dexterity + ((rand() % 2 + 1) * (lvlDanj - 1));
+	endurance = endurance + ((rand() % 2 + 1) * (lvlDanj - 1));
+	intelligence = intelligence + ((rand() % 2 + 1) * (lvlDanj - 1));
+	wisdom = wisdom + ((rand() % 2 + 1) * (lvlDanj - 1));
+	charizma = charizma + ((rand() % 2 + 1) * (lvlDanj - 1));
 	minDamage = 1 * power;
 	maxDamage = 1.5 * power;
 	parrying = 0.1 * dexterity + 0.02 * wisdom;
 	initiative = 0.03 * intelligence + 0.02 * wisdom + 0.01 * charizma;
-	health = (10 * ++lvlDanj) * (0.8 * power + 0.4 * endurance);
+	health = (10 * lvlDanj) * (0.8 * power + 0.4 * endurance);
 }
 int Monster::attack() {
 	int Damage = rand() % (maxDamage - minDamage) + minDamage; // ѕеределать алгоритм расчета урона
@@ -85,7 +84,21 @@ void Monster::loadFromText(ifstream& inFile) {
 	//name = line.substr(1, line.size() - 2);
 	name = line.substr(); // ѕроверить, если некорректно работает - использовать верхний вариант
 	inFile >> lvl >> power >> dexterity >> endurance >> intelligence >> wisdom >> charizma;
-	inFile >> minDamage >> maxDamage >> parrying >> initiative >> maxHealth >> health;
-	inFile >> typeMonster;
-	inFile >> descriptionMonster;
+	//inFile >> minDamage >> maxDamage >> parrying >> initiative >> maxHealth >> health;
+	inFile.ignore();
+	std::getline(inFile, line);
+	typeMonster = line;
+	descriptionMonster.clear();
+	while (std::getline(inFile, line))
+	{
+		if (line == "END_MONSTER")
+		{
+			break;
+		}
+		if (!descriptionMonster.empty())
+		{
+			descriptionMonster += "\n";
+		}
+		descriptionMonster += line;
+	}
 }

@@ -4,7 +4,7 @@
 #include "Danj.h"
 
 
-Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { /*mainMenu = new MainMenu();*/ cout << "creat Game" << endl; }
+Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { /*mainMenu = new MainMenu();*/ /*cout << "creat Game" << endl;*/ }
 Game::~Game() { 
 	//cout << "Delete" << endl;
 	delete mainMenu; 
@@ -16,6 +16,7 @@ void Game::run() {
 	village = new Village();
 	danj = new Danj();
 	loadBaseWeapons();
+	loadBaseMonster();
 	while (currentState != EXIT)
 	{
 		switch (currentState)
@@ -29,8 +30,10 @@ void Game::run() {
 			village->menuVillage();
 			break;
 		case TAVERN:
+			cout << "Таверна пока на ремонте после последней попойки))" << endl;
 			break;
 		case SHOP:
+			cout << "Сотрудники принимают товар, скоро откроемся, также ждем приезда инкосатовров с классом Money))" << endl;
 			break;
 		case DANJ:
 			danj->displayMenuDanj();
@@ -65,7 +68,7 @@ void Game::loadBaseWeapons()  // Загрузка базы оружия
 		Items* item = factory.createItem(line);  // Создаем предмет по идентификатору
 		if (item) {
 			item->loadItemsFromText(inFile);  // Загружаем данные предмета
-			Weapon* weapon = dynamic_cast<Weapon*>(item);  // Преобразуем к Weapon, Проверить можно ли после переоброзавания передавать предмет из базы в Инвентарь, возможно стоит отказаться
+			Weapon* weapon = dynamic_cast<Weapon*>(item);  // Преобразуем к Weapon
 			if (weapon) {
 				baseWeapon.push_back(weapon);  // Добавляем только оружие
 			}
@@ -76,4 +79,23 @@ void Game::loadBaseWeapons()  // Загрузка базы оружия
 	}
 	inFile.close();
 	cout << "База данных Оружия загружена удачно!!!" << endl;
+}
+void Game::loadBaseMonster() // Загрузка базы монстров
+{
+	ifstream inFile("MobList.txt");
+	if (!inFile) {
+		std::cerr << "Ошибка при открытии файла с базой оружия.\n";
+		return;
+	}
+	string line;
+	while (std::getline(inFile, line))
+	{
+		if (line.empty())
+			continue;
+		Monster* monster = new Monster();
+		monster->loadFromText(inFile);
+		baseMonster.push_back(monster);
+	}
+	inFile.close();
+	cout << "База данных Монстров загружена удачно!!!" << endl;
 }
