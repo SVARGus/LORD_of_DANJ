@@ -72,15 +72,20 @@ void Inventory::saveInventoryToText(ofstream& outFile) const // Метод загрузки и
 }
 void Inventory::loadInventoryFromText(ifstream& inFile) // Метод загрузки инвенторя из Текстового файла // реализовать для каждого наследника Items свой метод загрузки для возможности в дальнейшем масштабирования, чистоты кода и для инкапсуляции логики
 {
+	/*string line{};
+	std::getline(inFile, line);
+	nameInventory = line;*/
 	std::getline(inFile, nameInventory);
+	//inFile.ignore();
 	int size{};
 	inFile >> size;
+	cout << "Размер массива " << size << endl; // удалить позже строку
 	inFile.ignore();
 	string identifier;
 	for (int i = 0; i < size; i++)
 	{
 		std::getline(inFile, identifier);
-		Items* item = factory->createItem(identifier);
+		Items* item = factory.createItem(identifier);
 		if (item)
 		{
 			item->loadItemsFromText(inFile);

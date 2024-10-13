@@ -140,6 +140,7 @@ void Hero::loadFromText(ifstream& inFile) {
 	inFile >> lvl >> power >> dexterity >> endurance >> intelligence >> wisdom >> charizma;
 	inFile >> minDamage >> maxDamage >> parrying >> initiative >> maxHealth >> health;
 	inFile >> freePoints >> scalExp >> scalExpUp >> winBattle >> openLvlDanj >> Money;
+	inFile.ignore();
 	inventory.loadInventoryFromText(inFile);
 }
 void Hero::rebootStartHero() {

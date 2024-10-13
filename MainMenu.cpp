@@ -81,7 +81,8 @@ void MainMenu::newGame() {
     game.setState(Game::VILLAGE);
 }
 void MainMenu::loadGame() { // позже выбрать один вариант Загрузки и Сохранения
-    const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
+    Hero& player = Hero::getInstance();
+    //const string binaryDirect{ "Save_LORD_of_DANJ\\Savegame.bin" };
     const string textDirect{ "Save_LORD_of_DANJ\\Savegame.txt" };
     // Оба варианта загрузки работают
     /*ifstream myFileBinary(binaryDirect, std::ios::binary);

@@ -19,7 +19,7 @@ using std::ofstream;
 class Inventory
 {
 	vector<Items*> inventoryItems;
-	ItemFactory* factory;
+	ConcreteItemFactory factory;
 	string nameInventory{}; // Добавляет инветарю название
 	//int sizeInventory{}; // в будущем можно будет ограничивать инветарь и ввести рюкзаки разной вместитеьностью и прочими характеристиками.
 public:

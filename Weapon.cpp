@@ -30,12 +30,13 @@ void Sword::loadItemsFromText(ifstream& inFile) // Метод загрузки Weapon из Текс
 	int tempTypeWeapon{};
 	int tempQualityWeapon{};
 	int tempTypeDamegeWeapon{};
-	inFile >> tempTypeWeapon >> tempQualityWeapon >> tempTypeDamegeWeapon >> damage; // надо переделать для загрузки enum
+	inFile >> tempTypeWeapon >> tempQualityWeapon >> tempTypeDamegeWeapon >> damage;
 	typeWeapon = static_cast<TypeWeapon>(tempTypeWeapon);
 	qualityWeapon = static_cast<QualityWeapon>(tempTypeWeapon);
 	typeDamegeWeapon = static_cast<TypeDamageWeapon>(tempTypeWeapon);
 	inFile >> money;
-	std::getline(inFile, line);
+	inFile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	description.clear();
 	while (std::getline(inFile, line))
 	{
 		if (line == "END_DESCRIPTION")
@@ -48,7 +49,6 @@ void Sword::loadItemsFromText(ifstream& inFile) // Метод загрузки Weapon из Текс
 		}
 		description += line;
 	}
-	description = line.substr();
 }
 // Методы КОПЬЯ
 void Spear::displayItems() const
