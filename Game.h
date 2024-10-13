@@ -11,6 +11,7 @@
 #include "Items.h"
 #include <vector>
 #include <string>
+#include "Monster.h"
 
 using std::cout;
 using std::endl;
