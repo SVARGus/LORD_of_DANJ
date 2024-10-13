@@ -20,11 +20,11 @@ void Hero::displayCharacteristic() const {
 	cout << "Текущий уровень опыта: " << scalExp << " / " << scalExpUp << endl;
 	displayMainCharacteristic();
 	cout << "* - * - * - * - * - * - * - * - * - * - *" << endl;
-	displayInventoryHero();
+	//displayInventoryHero();
 }
 int Hero::attack() {
 	int Damage = rand() % (maxDamage - minDamage) + minDamage; // Переделать алгоритм расчета урона
-	return (Damage + Damage * initiative);
+	return (Damage + Damage * initiative) + equippedFirstWeapon->attack();
 }
 void Hero::takeDamage(int attack) {
 	if (rand() % 30 / 10 <= parrying / lvl)
@@ -175,11 +175,11 @@ void Hero::equipSecondWeapon(int index) // Экипировка оружия из инвентаря во вто
 {
 	cout << "Метод equipSecondWeapon пока не реализован" << endl;
 }
-void Hero::unEquipFirstWeapon(int index) // Снять оружие 
+void Hero::unEquipFirstWeapon() // Снять оружие 
 {
 	equippedFirstWeapon = nullptr;
 }
-void Hero::unEquipSecondWeapon(int index) // Снять оружие
+void Hero::unEquipSecondWeapon() // Снять оружие
 {
 	//equippedSecondWeapon = nullptr;
 	cout << "Метод unEquipFirstWeapon пока не реализован" << endl;
@@ -191,4 +191,71 @@ void Hero::addItemToInventory(Items* item) // Метод добавления предмета в инвент
 void Hero::transferItemTo(Inventory& other, int index) // Метод передачи предмета из своего инвентаря в другой инвентарь (сундук, магазин)
 {
 
+}
+void Hero::menuHero() // Меню героя, для просмотра статистики, смены оружия, повышение характеристики и прочего
+{
+	int menu{};
+	int index{};
+	do
+	{
+		displayMenuHero();
+		cin >> menu;
+		switch (menu)
+		{
+		case 0:
+			break;
+		case 1:
+			displayCharacteristic();
+			break;
+		case 2:
+			if (freePoints > 0)
+			{
+				cout << "У вас есть свободные очки характеристик, желаете распределить? (Y/N)";
+				switch (int c = getchar(); c)
+				{
+				case 'Y':
+				case 'y':
+					distrPointHero();
+				}
+			}
+			else
+			{
+				cout << "Нераспределенные характеристики = " << freePoints << endl;
+			}
+			break;
+		case 3:
+			displayInventoryHero();
+			break;
+		case 4:
+			cout << "Укажите индекс: ";
+			cin >> index;
+			displayInventoryHero(index);
+			break;
+		case 5:
+			cout << "укажите индекс ячейки инвентаря из которой хотите взять оружие: ";
+			cin >> index;
+			equipFirstWeapon(index);
+			break;
+		case 6:
+			unEquipFirstWeapon();
+			break;
+		case 7:
+			break;
+		default:
+			cout << "Ошибка ввода" << endl;
+			break;
+		}
+	} while (menu != 0);
+}
+void Hero::displayMenuHero() 
+{
+	cout << "Меню действий героя: " << endl;
+	cout << "1) Просмотр характерстик героя" << endl;
+	cout << "2) Повысить характеристики" << endl;
+	cout << "3) Просмотреть инвентарь" << endl;
+	cout << "4) Посмотреть все характристики определенного предмета из инвентаря" << endl;
+	cout << "5) Взять оружие из инвентаря" << endl;
+	cout << "6) Снять оружие из инвентаря" << endl;
+	cout << "7) Одеть амуницию (пока не доступно)" << endl;
+	cout << "0) Назад" << endl;
 }

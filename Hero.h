@@ -70,9 +70,12 @@ public:
 	void displayInventoryHero(int index) const; // вывод на экран определенного предмета со всей информацией
 	void equipFirstWeapon(int index); // Экипировка оружия из инвентаря в первую руку
 	void equipSecondWeapon(int index); // Экипировка оружия из инвентаря во вторую руку
-	void unEquipFirstWeapon(int index); // Снять оружие 
-	void unEquipSecondWeapon(int index); // Снять оружие
+	void unEquipFirstWeapon(); // Снять оружие 
+	void unEquipSecondWeapon(); // Снять оружие
 	void addItemToInventory(Items* item); // Метод добавления предмета в инвентарь
 	void transferItemTo(Inventory& other, int index); // Метод передачи предмета из своего инвентаря в другой инвентарь (сундук, магазин)
+
+	void menuHero();
+	void displayMenuHero(); // Меню героя, для просмотра статистики, смены оружия, повышение характеристики и прочего
 };
 

@@ -28,17 +28,7 @@ void Village::menuVillage() {
 		game.setState(Game::DANJ);
 		break;
 	case Village::HERO:
-		player.displayCharacteristic();
-		if (player.getFreepoints() > 0)
-		{
-			cout << "У вас есть свободные очки характеристик, желаете распределить? (Y/N)";
-			switch (int c = getchar(); c)
-			{
-			case 'Y':
-			case 'y':
-				player.distrPointHero();
-			}
-		}
+		player.menuHero();
 		break;
 	case Village::MAIN_MENU:
 		game.setState(Game::MAIN_MENU);

@@ -1,6 +1,20 @@
-Pavel
-1 4 4 2 2 2 2
-4 6 0.44 0.12 40 40
+werwe
+1 8 4 1 1 1 1
+8 12 0.42 0.06 68 68
 0 0 100 0 0 0
 Рюкзак героя
-0
+2
+wep01
+wep01001
+Мечь странника
+0 0 0 3
+10
+END_DESCRIPTION
+END_DESCRIPTION
+wep01
+wep01002
+Мечь жажды
+0 0 0 6
+20
+END_DESCRIPTION
+END_DESCRIPTION
