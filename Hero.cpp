@@ -19,6 +19,8 @@ void Hero::displayCharacteristic() const {
 	cout << "Количество жизни: [" << health << " / " << maxHealth << "]" << endl;
 	cout << "Текущий уровень опыта: " << scalExp << " / " << scalExpUp << endl;
 	displayMainCharacteristic();
+	cout << "* - * - * - * - * - * - * - * - * - * - *" << endl;
+	displayInventoryHero();
 }
 int Hero::attack() {
 	int Damage = rand() % (maxDamage - minDamage) + minDamage; // Переделать алгоритм расчета урона
@@ -148,4 +150,45 @@ void Hero::rebootStartHero() {
 	winBattle = 0;
 	openLvlDanj = 0;
 	Money = 0;
+}
+
+void Hero::displayInventoryHero() const // Полный вывод предметов в инвенторе с урезанной информацией
+{
+	inventory.displayInventory();
+}
+void Hero::displayInventoryHero(int index) const // вывод на экран определенного предмета со всей информацией
+{
+	inventory.displayInventory(index);
+}
+void Hero::equipFirstWeapon(int index) // Экипировка оружия из инвентаря в первую руку
+{
+	Weapon* weapon = dynamic_cast<Weapon*>(inventory.getItem(index));
+	if (weapon)
+	{
+		equippedFirstWeapon = weapon;
+		cout << "Герой экипировал оружие: " << equippedFirstWeapon->getName() << endl;
+	}
+	else
+		cout << "В инветаре в данной ячейке нету оружия" << endl;
+}
+void Hero::equipSecondWeapon(int index) // Экипировка оружия из инвентаря во вторую руку
+{
+	cout << "Метод equipSecondWeapon пока не реализован" << endl;
+}
+void Hero::unEquipFirstWeapon(int index) // Снять оружие 
+{
+	equippedFirstWeapon = nullptr;
+}
+void Hero::unEquipSecondWeapon(int index) // Снять оружие
+{
+	//equippedSecondWeapon = nullptr;
+	cout << "Метод unEquipFirstWeapon пока не реализован" << endl;
+}
+void Hero::addItemToInventory(Items* item) // Метод добавления предмета в инвентарь
+{
+	inventory.addItem(item);
+}
+void Hero::transferItemTo(Inventory& other, int index) // Метод передачи предмета из своего инвентаря в другой инвентарь (сундук, магазин)
+{
+
 }

@@ -66,8 +66,8 @@ public:
 	// Методы для взаимодествия с инвентарем и предметами Items, а также те методы которые надо переделать
 	int attack(); // Переделать под возможность использования оружия
 
-	void displayInventory(); // Полный вывод предметов в инвенторе с урезанной информацией
-	void displayInventory(int index); // вывод на экран определенного предмета со всей информацией
+	void displayInventoryHero() const; // Полный вывод предметов в инвенторе с урезанной информацией
+	void displayInventoryHero(int index) const; // вывод на экран определенного предмета со всей информацией
 	void equipFirstWeapon(int index); // Экипировка оружия из инвентаря в первую руку
 	void equipSecondWeapon(int index); // Экипировка оружия из инвентаря во вторую руку
 	void unEquipFirstWeapon(int index); // Снять оружие 

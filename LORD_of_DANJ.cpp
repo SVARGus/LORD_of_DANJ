@@ -12,6 +12,8 @@
 #include <Windows.h>
 #include "Game.h"
 #include "MainMenu.h"
+//#include <locale>
+//#include <codecvt>
 
 
 using std::cout;
@@ -23,6 +25,7 @@ int main()
 {
     setlocale(LC_ALL, "ru");
     srand(time(NULL));
+    //std::locale utf8_locale(std::locale(), new std::codecvt_utf8<wchar_t>);
     //MainMenu menu{};
     Game &newGame = Game::getInstance();
     newGame.run();

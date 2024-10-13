@@ -73,6 +73,9 @@ void MainMenu::newGame() {
         player.distrPointHero();
     }
     player.recalculateCharacteristic();
+    //Стартово добовляем амуницию и оружие в инвентарь для тестирования - позже можно убрать
+    player.addItemToInventory(game.baseWeapon[0]);
+    player.addItemToInventory(game.baseWeapon[1]);
     // далее должен быть переход в класс деревня с выходом из Главного меню (надо подумать как реализовать)
     gameRunning = true; // подымаем флаг запуска игровой сессии
     game.setState(Game::VILLAGE);

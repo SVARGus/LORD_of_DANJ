@@ -11,13 +11,17 @@ void Inventory::removItem(int index) // Метод удаления (выбрасывания) предмета и
 	if (index >= 0 && index < inventoryItems.size())
 	{
 		cout << "Предмет " << inventoryItems[index]->getName() << " удален из " << nameInventory << "." << endl;
-		delete inventoryItems[index];
+		delete inventoryItems[index]; // При удале из инветаря удаляется только адрес, но не сам объект, по этому предварительно нужно удалить сам объект
 		inventoryItems.erase(inventoryItems.begin() + index);
 	}
 }
 void Inventory::transferItem(Inventory& other, int index) // Метод трансфера между инветорями (например между игроком и магазином). index (индекс) предмеа текущего инвентаря добавить в other (другой) инветарь
 {
-
+	if (index >= 0 && index < inventoryItems.size())
+	{
+		other.addItem(inventoryItems[index]);
+		inventoryItems.erase(inventoryItems.begin() + index);
+	}
 }
 void Inventory::displayInventory() const // Полный вывод инветоря с минимальными данными
 {
@@ -42,16 +46,16 @@ Items* Inventory::getItem(int index) // Получение предмета по индексу
 // Методы для вторичной реализации
 void Inventory::saveInventoryToBinary(ofstream& outFile) const // Метод сохранения инвенторя в Бинарный файл
 {
-	int sizeInventoryItems = inventoryItems.size();
-	outFile.write((char*)&sizeInventoryItems, sizeof(sizeInventoryItems));
-	for (int i = 0; i < inventoryItems.size(); i++)
-	{
-		if (true) // выявления какой метод какого подкласса будет вызван
-		{
+	//int sizeInventoryItems = inventoryItems.size();
+	//outFile.write((char*)&sizeInventoryItems, sizeof(sizeInventoryItems));
+	//for (int i = 0; i < inventoryItems.size(); i++)
+	//{
+	//	if (true) // выявления какой метод какого подкласса будет вызван
+	//	{
 
-		}
-		inventoryItems[i]->saveItemsToBinary(outFile);
-	}
+	//	}
+	//	inventoryItems[i]->saveItemsToBinary(outFile);
+	//}
 	// реализовать для каждого наследника Items свой метод сохранения для возможности в дальнейшем масштабирования, чистоты кода и для инкапсуляции логики
 }
 void Inventory::loadInventoryFromBinary(ifstream& inFile) // Метод сохранения инвенторя в Текстовый файл
@@ -91,8 +95,14 @@ void Inventory::loadInventoryFromText(ifstream& inFile) // Метод загрузки инвент
 }
 void Inventory::replaceItem(int index, Items* newItem) // метод замены предмета по индексу на новый
 {
-	// реализовать
+	if (index >= 0 && index < inventoryItems.size())
+	{
+		cout << "Предмет " << inventoryItems[index]->getName() << " заменен на предмет  " << newItem->getName() << "." << endl;
+		delete inventoryItems[index]; // При удале из инветаря удаляется только адрес, но не сам объект, по этому предварительно нужно удалить сам объект
+		inventoryItems[index] = newItem;
+	}
 }
+
 // методы на будущее - пока не будут реализованы или будут иметь заглушку
 void Inventory::sortInventoryBy(const string& criterion) // Метод сортировки по разным критериям
 {
