@@ -17,6 +17,12 @@ void Game::run() {
 	danj = new Danj();
 	loadBaseWeapons();
 	loadBaseMonster();
+	// для теста корректности загрузки базы монстров
+	for (int i = 0; i < baseMonster.size(); i++)
+	{
+		baseMonster[i]->displayCharacteristic();
+	}
+	// удалить после теста
 	while (currentState != EXIT)
 	{
 		switch (currentState)

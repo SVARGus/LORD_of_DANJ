@@ -260,3 +260,13 @@ void Hero::displayMenuHero()
 	cout << "7) ќдеть амуницию (пока не доступно)" << endl;
 	cout << "0) Ќазад" << endl;
 }
+void Hero::upExp(int exp) // ѕолучение опыта и если достигнут или превышен уровень scalExpUp и пересчитывать уровень scalExpUp через метод recalculateCharacteristic
+{
+	scalExp += exp;
+	if (scalExp % scalExpUp)
+	{
+		cout << "ѕоздравл€ю ваш уровень повышен до " << lvl++ << endl;
+		scalExp -= scalExpUp;
+		recalculateCharacteristic();
+	}
+}

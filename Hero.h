@@ -77,5 +77,8 @@ public:
 
 	void menuHero();
 	void displayMenuHero(); // Меню героя, для просмотра статистики, смены оружия, повышение характеристики и прочего
+
+	void upExp(int exp); // Получение опыта и если достигнут или превышен уровень scalExpUp и пересчитывать уровень scalExpUp через метод recalculateCharacteristic
+
 };
 

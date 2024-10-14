@@ -13,7 +13,6 @@ using std::ofstream;
 
 class Monster : public MainCharacteristic
 {
-	int lvlDanj{}; // уровень равен уровню данжа - позже надо будет пределать
 	string typeMonster{}; // Тип монстров (например скелеты, нежить, разбойники, ящеры, растения и другие) - возможно в будущем надо выделить в отдельный класс
 	string descriptionMonster{}; // Описание моба
 public:
@@ -31,7 +30,7 @@ public:
 	// Геттеры
 	string getName() { return name; }
 	string getTypeMonster() { return typeMonster; }
-	void setLvlDanj(int lvl) { lvlDanj = lvl; }
+	void setLvlMonster(int Lvl) { lvl = Lvl; }
 
 };
 

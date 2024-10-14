@@ -1,17 +1,17 @@
 #include "Monster.h"
 
 void Monster::recalculateCharacteristic(/*int lvlDanj*/) {
-	power = power + ((rand() % 2 + 1) * (lvlDanj-1));
-	dexterity = dexterity + ((rand() % 2 + 1) * (lvlDanj - 1));
-	endurance = endurance + ((rand() % 2 + 1) * (lvlDanj - 1));
-	intelligence = intelligence + ((rand() % 2 + 1) * (lvlDanj - 1));
-	wisdom = wisdom + ((rand() % 2 + 1) * (lvlDanj - 1));
-	charizma = charizma + ((rand() % 2 + 1) * (lvlDanj - 1));
+	power = power + ((rand() % 2 + 1) * (lvl - 1));
+	dexterity = dexterity + ((rand() % 2 + 1) * (lvl - 1));
+	endurance = endurance + ((rand() % 2 + 1) * (lvl - 1));
+	intelligence = intelligence + ((rand() % 2 + 1) * (lvl - 1));
+	wisdom = wisdom + ((rand() % 2 + 1) * (lvl - 1));
+	charizma = charizma + ((rand() % 2 + 1) * (lvl - 1));
 	minDamage = 1 * power;
 	maxDamage = 1.5 * power;
 	parrying = 0.1 * dexterity + 0.02 * wisdom;
 	initiative = 0.03 * intelligence + 0.02 * wisdom + 0.01 * charizma;
-	health = (10 * lvlDanj) * (0.8 * power + 0.4 * endurance);
+	health = (10 * lvl) * (0.8 * power + 0.4 * endurance);
 }
 int Monster::attack() {
 	int Damage = rand() % (maxDamage - minDamage) + minDamage; // Переделать алгоритм расчета урона
