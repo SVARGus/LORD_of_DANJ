@@ -78,14 +78,12 @@ void Monster::saveToText(ofstream& outFile) const {
 	outFile << typeMonster << '\n';
 	outFile << descriptionMonster << '\n';
 }
-void Monster::loadFromText(ifstream& inFile) {
-	string line{};
-	std::getline(inFile, line);
-	//name = line.substr(1, line.size() - 2);
-	name = line.substr(); // ѕроверить, если некорректно работает - использовать верхний вариант
+void Monster::loadFromText(ifstream& inFile, const string& firstLine) {
+	name = firstLine; // ѕроверить, если некорректно работает - использовать верхний вариант
 	inFile >> lvl >> power >> dexterity >> endurance >> intelligence >> wisdom >> charizma;
 	//inFile >> minDamage >> maxDamage >> parrying >> initiative >> maxHealth >> health;
 	inFile.ignore();
+	string line;
 	std::getline(inFile, line);
 	typeMonster = line;
 	descriptionMonster.clear();

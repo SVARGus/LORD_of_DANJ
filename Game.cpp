@@ -99,7 +99,7 @@ void Game::loadBaseMonster() // Загрузка базы монстров
 		if (line.empty())
 			continue;
 		Monster* monster = new Monster();
-		monster->loadFromText(inFile);
+		monster->loadFromText(inFile, line);
 		baseMonster.push_back(monster);
 	}
 	inFile.close();

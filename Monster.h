@@ -26,7 +26,7 @@ public:
 	void saveToBinary(ofstream& outFile) const;
 	void loadFromBinary(ifstream& inFile);
 	void saveToText(ofstream& outFile) const;
-	void loadFromText(ifstream& inFile);
+	void loadFromText(ifstream& inFile, const string& firstLine);
 	// Геттеры
 	string getName() { return name; }
 	string getTypeMonster() { return typeMonster; }

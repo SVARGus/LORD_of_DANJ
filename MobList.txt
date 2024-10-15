@@ -1,29 +1,29 @@
 Fire_Dragon
 1 4 4 3 2 1 2
 Dragon
-РџРµСЂРІС‹Р№ РґСЂР°РєРѕРЅ РІ СЌС‚РѕРј РјРёСЂРµ
+Первый дракон в этом мире
 END_MONSTER
 
 Ice_Skeleton
 1 3 5 3 1 2 1
 Skeleton
-РЎРєРµР»РµС‚С‹ РґРѕР»РіРѕ РЅРµ Р¶РёРІСѓС‚
+Скелеты долго не живут
 END_MONSTER
 
 Poison_Spider
 1 5 5 2 2 1 1
 Spider
-РљР°РєРѕР№С‚Рѕ РїР°СѓРє
+Какойто паук
 END_MONSTER
 
 Dark_Wizard
 1 5 2 4 2 1 2
 Dragon
-РўРµРјРЅС‹Р№, РѕС‡РµРЅСЊ С‚РµРјРЅС‹Р№!!!
+Темный, очень темный!!!
 END_MONSTER
 
 Shadow_Beast
 1 5 3 3 1 2 2
 Skeleton
-РќРµ РїРѕРјРЅСЋ РєС‚Рѕ СЌС‚Рѕ
+Не помню кто это
 END_MONSTER
