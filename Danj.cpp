@@ -16,10 +16,20 @@ void Danj::displayMenuDanj() const {
 void Danj::menuDanj() {
 	int select{};
 	int selectLvl{};
+	char Y_N{};
 	cin >> select;
 	switch (select)
 	{
 	case Danj::BATL_DANJ:
+		// Вызываемый метод подбора противника и метод битвы
+		//char Y_N{};
+		do
+		{
+			batlDanj(pickingOpponent(game.baseMonster));
+			player.setHealth(player.getMaxDamage()); // Воставновление здоровья для следующей битвы
+			cout << "Следующая битва? ДА(Y) - НЕТ(N) ";
+			cin >> Y_N;
+		} while (Y_N == 'Y' || Y_N == 'y');
 		break;
 	case Danj::SELECT_LVL:
 		cout << "Укажите на какой уровень желаете спуститься: ";
@@ -76,5 +86,61 @@ void Danj::upLvlDanj(bool win) // Повышение открытого уровня данжа
 			++openLevelDanj;
 			countVictory = 0;
 		}
+	}
+}
+void Danj::batlDanj(Monster mob) // расчет раунда и вывод на экран резултатов раунда
+{
+	int countRound{1};
+	std::cout << "Пробираясь по \"" << nameDanj << "\" " << carrentLevelDanj << " уровня, вы повстречали монстра " << mob.getName() << endl;
+	cout << "Приготовьтесь к битве!!!" << std::endl;
+	int displayDamage{};
+	while (player.getHealth() > 0 && mob.getHealth() > 0)
+	{
+		cout << "Раунд #" << countRound << " между " << player.getName() << " и " << mob.getName() << endl;
+		if (player.getInitiative() >= mob.getInitiative())
+		{
+			displayDamage = player.attack();
+			cout << "1) " << player.getName() << " наносит урон = " << displayDamage << endl;
+			mob.takeDamage(displayDamage);
+			if (mob.getHealth() <= 0)
+			{
+				cout << "2) " << mob.getName() << " пропускает ход" << endl;
+			}
+			else
+			{
+				displayDamage = mob.attack();
+				cout << "2) " << mob.getName() << " наносит урон = " << displayDamage << endl;
+				player.takeDamage(displayDamage);
+			}
+		}
+		else // расчет раунда если Монстр получил преимущество
+		{
+			displayDamage = mob.attack();
+			cout << "1) " << mob.getName() << " наносит урон = " << displayDamage << endl;
+			player.takeDamage(displayDamage);
+			if (player.getHealth() <= 0)
+			{
+				cout << "2) " << player.getName() << " пропускает ход" << endl;
+			}
+			else
+			{
+				displayDamage = player.attack();
+				cout << "2) " << player.getName() << " наносит урон = " << displayDamage << endl;
+				mob.takeDamage(displayDamage);
+			}
+		}
+		cout << "Оставшеясе здоровье: " << player.getName() << " = " << player.getHealth() << ";" << mob.getName() << " = " << mob.getHealth() << endl;
+		++countRound;
+	}
+	if (mob.getHealth() <= 0)
+	{
+		cout << "Поздравляю, вы победили!" << endl;
+		calculationExpBatl();
+		upLvlDanj(true);
+	}
+	else
+	{
+		cout << "Вы проиграли!!!" << endl;
+		upLvlDanj(false);
 	}
 }
