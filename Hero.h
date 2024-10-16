@@ -21,7 +21,7 @@ class Hero : public MainCharacteristic
 	int scalExp{};
 	int scalExpUp{};
 	int winBattle{};
-	int openLvlDanj{};
+	int openLvlDanj{1};
 	//# InventoryWeapon : array<Weapon, 2> // добавить после реализации классов с оружием
 	int Money{}; // позже вывести в отдельный класс для возможности взаимодействия с Магазином,Таверной, выпадение с монстров и других возможностей в будущем
 

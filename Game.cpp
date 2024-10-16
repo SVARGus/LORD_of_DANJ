@@ -1,13 +1,25 @@
 #include "Game.h"
+
 #include "MainMenu.h"
 #include "Village.h"
 #include "Danj.h"
 
+#include <string>
+#include <fstream>
+
+using std::string;
+using std::cout;
+using std::endl;
+using std::cin;
+using std::fstream;
+using std::ifstream;
+using std::ofstream;
 
 Game::Game() : currentState{ MAIN_MENU }, previousState{ MAIN_MENU } { /*mainMenu = new MainMenu();*/ /*cout << "creat Game" << endl;*/ }
-Game::~Game() { 
-	//cout << "Delete" << endl;
-	delete mainMenu; 
+Game::~Game() {
+	delete mainMenu;
+	delete village;
+	delete danj;
 }
 void Game::run() {
 	mainMenu = new MainMenu(); /* Из - за того что в классе mainMenu есть указатель на класс Game, то при попытке в конструкторе нельзя создавать объект MainMenu, 
@@ -17,12 +29,7 @@ void Game::run() {
 	danj = new Danj();
 	loadBaseWeapons();
 	loadBaseMonster();
-	// для теста корректности загрузки базы монстров
-	for (int i = 0; i < baseMonster.size(); i++)
-	{
-		baseMonster[i]->displayCharacteristic();
-	}
-	// удалить после теста
+	// добавить системную паузу и очистку онсоли после паузы
 	while (currentState != EXIT)
 	{
 		switch (currentState)
@@ -51,7 +58,6 @@ void Game::run() {
 			break;
 		}
 	}
-	//cout << "\n\t\tСпасибо за игру! Будем вас ждать снова!\n\n";
 }
 void Game::setState(State newState) {
 	previousState = currentState;
@@ -67,7 +73,6 @@ void Game::loadBaseWeapons()  // Загрузка базы оружия
 		std::cerr << "Ошибка при открытии файла с базой оружия.\n";
 		return;
 	}
-
 	string line;
 	ConcreteItemFactory factory;
 	while (std::getline(inFile, line)) {
@@ -75,12 +80,10 @@ void Game::loadBaseWeapons()  // Загрузка базы оружия
 		if (item) {
 			item->loadItemsFromText(inFile);  // Загружаем данные предмета
 			Weapon* weapon = dynamic_cast<Weapon*>(item);  // Преобразуем к Weapon
-			if (weapon) {
+			if (weapon)
 				baseWeapon.push_back(weapon);  // Добавляем только оружие
-			}
-			else {
+			else 
 				delete item;  // Если это не оружие, освобождаем память
-			}
 		}
 	}
 	inFile.close();

@@ -1,30 +1,15 @@
 #pragma once
 #include <iostream>
-//#include "MainCharacteristic.h"
-//#include "Hero.h"
 //#include "MainMenu.h"
-#include <fstream>
-//#include <filesystem> // Библиотека для работы с файловой системой (в данном случае создание папки для сохранения) Работает на стандарте с С++17
-//#include <Windows.h>
 //#include "Village.h"
 #include "Weapon.h"
 #include "Items.h"
 #include <vector>
-#include <string>
 #include "Monster.h"
-
-using std::cout;
-using std::endl;
-using std::cin;
-using std::string;
-using std::fstream;
-using std::ifstream;
-using std::ofstream;
 
 class MainMenu;
 class Village;
 class Danj;
-
 
 class Game // Класс реализован по паттерну Singleton, так как игровой цикл может быть только один
 {
@@ -45,7 +30,6 @@ private:
 	~Game();
 	Game(const Game&) = delete;
 	Game& operator=(const Game&) = delete;
-	//static Game* instance;
 	void loadBaseWeapons();  // Загрузка базы оружия
 	//void loadBaseEquipment();  // Загрузка базы амуниции
 	//void loadBaseOtherItems();  // Загрузка прочих предметов

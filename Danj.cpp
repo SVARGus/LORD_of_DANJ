@@ -26,7 +26,7 @@ void Danj::menuDanj() {
 		do
 		{
 			batlDanj(pickingOpponent(game.baseMonster));
-			player.setHealth(player.getMaxDamage()); // Воставновление здоровья для следующей битвы
+			player.setHealth(player.getMaxHealth()); // Воставновление здоровья для следующей битвы
 			cout << "Следующая битва? ДА(Y) - НЕТ(N) ";
 			cin >> Y_N;
 		} while (Y_N == 'Y' || Y_N == 'y');

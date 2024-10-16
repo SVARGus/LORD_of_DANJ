@@ -24,7 +24,11 @@ void Hero::displayCharacteristic() const {
 }
 int Hero::attack() {
 	int Damage = rand() % (maxDamage - minDamage) + minDamage; // ѕеределать алгоритм расчета урона
-	return (Damage + Damage * initiative) + equippedFirstWeapon->attack();
+	if (equippedFirstWeapon)
+	{
+		return (Damage + Damage * initiative) + equippedFirstWeapon->attack();
+	}
+	return (Damage + Damage * initiative);
 }
 void Hero::takeDamage(int attack) {
 	if (rand() % 30 / 10 <= parrying / lvl)
@@ -263,7 +267,7 @@ void Hero::displayMenuHero()
 void Hero::upExp(int exp) // ѕолучение опыта и если достигнут или превышен уровень scalExpUp и пересчитывать уровень scalExpUp через метод recalculateCharacteristic
 {
 	scalExp += exp;
-	if (scalExp % scalExpUp)
+	if ((scalExp % scalExpUp) == 1)
 	{
 		cout << "ѕоздравл€ю ваш уровень повышен до " << lvl++ << endl;
 		scalExp -= scalExpUp;
